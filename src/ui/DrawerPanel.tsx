@@ -3,7 +3,7 @@ import { useDrawerItems } from './useDrawerItems';
 import { useFreshItemId } from './useFreshItemId';
 import { DrawerItemCard } from './DrawerItemCard';
 import { useHostTheme } from '@/src/lib/theme';
-import { applyDock, DRAWER_WIDTH_PX } from '@/src/lib/dock';
+import { applyDock, cleanupDock, DRAWER_WIDTH_PX } from '@/src/lib/dock';
 import type { DrawerItem } from '@/src/lib/schema';
 
 interface Props {
@@ -25,6 +25,11 @@ export function DrawerPanel({ onItemClick }: Props) {
     applyDock(open);
   }, [open]);
 
+  // Undock on unmount too. The content script's onRemove also calls this, but a
+  // render error or an SPA teardown that skips onRemove would otherwise leave the
+  // host page squeezed 320px with no drawer to un-squeeze it.
+  useEffect(() => cleanupDock, []);
+
   const subtitle =
     sorted.length > 0
       ? `떠오른 질문 ${sorted.length}개 · 클릭하면 바로 질문`
@@ -36,7 +41,7 @@ export function DrawerPanel({ onItemClick }: Props) {
         aria-label={open ? '서랍 닫기' : '서랍 열기'}
         onClick={() => setOpen((v) => !v)}
         style={{ right: open ? DRAWER_WIDTH_PX : 0 }}
-        className="fixed top-1/3 z-[2147483647] rounded-l-lg border border-r-0 border-qd-line bg-qd-panel px-2 py-3 text-xs text-qd-muted shadow-sm dark:border-qd-line-dark dark:bg-qd-panel-dark dark:text-qd-muted-dark"
+        className="pointer-events-auto fixed top-1/3 z-[2147483647] rounded-l-lg border border-r-0 border-qd-line bg-qd-panel px-2 py-3 text-xs text-qd-muted shadow-sm dark:border-qd-line-dark dark:bg-qd-panel-dark dark:text-qd-muted-dark"
       >
         {open ? '›' : '‹'}
       </button>
@@ -44,7 +49,7 @@ export function DrawerPanel({ onItemClick }: Props) {
       {open && (
         <aside
           style={{ width: DRAWER_WIDTH_PX }}
-          className="fixed right-0 top-0 z-[2147483647] flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans dark:border-qd-line-dark dark:bg-qd-panel-dark"
+          className="pointer-events-auto fixed right-0 top-0 z-[2147483647] flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans dark:border-qd-line-dark dark:bg-qd-panel-dark"
         >
           <header className="px-4 pb-3 pt-4">
             <h2 className="flex items-center gap-1.5 text-sm font-semibold text-qd-ink dark:text-qd-ink-dark">
