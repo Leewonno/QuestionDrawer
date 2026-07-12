@@ -28,7 +28,7 @@ export function App({ site }: { site: SiteId }) {
   return (
     <>
       <SelectionButton onCapture={handleCapture} />
-      <DrawerPanel onItemClick={handleItemClick} />
+      <DrawerPanel site={site} onItemClick={handleItemClick} />
     </>
   );
 }
