@@ -14,7 +14,7 @@ describe('DrawerPanel', () => {
   });
 
   it('renders stored questions and fires onItemClick', async () => {
-    await drawerStorage.add(createDrawerItem('side effect', 'claude'));
+    await drawerStorage.add(createDrawerItem('side effect', 'claude', null));
     const onItemClick = vi.fn();
     render(<DrawerPanel onItemClick={onItemClick} />);
 
@@ -24,7 +24,7 @@ describe('DrawerPanel', () => {
   });
 
   it('removes an item when its delete button is clicked', async () => {
-    await drawerStorage.add(createDrawerItem('side effect', 'claude'));
+    await drawerStorage.add(createDrawerItem('side effect', 'claude', null));
     render(<DrawerPanel onItemClick={() => {}} />);
 
     await screen.findByText('side effect에 대해 자세히 설명해줘');
@@ -36,8 +36,8 @@ describe('DrawerPanel', () => {
   });
 
   it('counts the questions in the header', async () => {
-    await drawerStorage.add(createDrawerItem('side effect', 'claude'));
-    await drawerStorage.add(createDrawerItem('cleanup', 'claude'));
+    await drawerStorage.add(createDrawerItem('side effect', 'claude', null));
+    await drawerStorage.add(createDrawerItem('cleanup', 'claude', null));
     render(<DrawerPanel onItemClick={() => {}} />);
 
     expect(await screen.findByText('떠오른 질문 2개 · 클릭하면 바로 질문')).toBeInTheDocument();
@@ -52,8 +52,8 @@ describe('DrawerPanel', () => {
   });
 
   it('lists the newest question first', async () => {
-    await drawerStorage.add({ ...createDrawerItem('older', 'claude'), createdAt: 1000 });
-    await drawerStorage.add({ ...createDrawerItem('newer', 'claude'), createdAt: 2000 });
+    await drawerStorage.add({ ...createDrawerItem('older', 'claude', null), createdAt: 1000 });
+    await drawerStorage.add({ ...createDrawerItem('newer', 'claude', null), createdAt: 2000 });
     render(<DrawerPanel onItemClick={() => {}} />);
 
     await screen.findByText('newer에 대해 자세히 설명해줘');
