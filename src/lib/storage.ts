@@ -17,7 +17,7 @@ async function read(): Promise<DrawerState> {
 }
 
 async function write(state: DrawerState): Promise<void> {
-  await storage.setItem(KEY, state);
+  await storage.setItem(KEY, DrawerStateSchema.parse(state));
 }
 
 export const drawerStorage = {

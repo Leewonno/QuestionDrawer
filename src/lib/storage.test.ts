@@ -38,4 +38,20 @@ describe('drawerStorage', () => {
     await fakeBrowser.storage.local.set({ 'local:drawer': { items: [{ bad: true }] } });
     expect(await drawerStorage.getAll()).toEqual([]);
   });
+
+  it('watch fires callback with updated items and unwatch stops further callbacks', async () => {
+    const calls: DrawerItem[][] = [];
+    const unwatch = drawerStorage.watch((items) => {
+      calls.push(items);
+    });
+
+    await drawerStorage.add(item('a'));
+    expect(calls).toHaveLength(1);
+    expect(calls[0].map((i) => i.id)).toEqual(['a']);
+
+    unwatch();
+
+    await drawerStorage.add(item('b'));
+    expect(calls).toHaveLength(1);
+  });
 });
