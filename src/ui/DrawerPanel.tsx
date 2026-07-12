@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDrawerItems } from './useDrawerItems';
+import { useFreshItemId } from './useFreshItemId';
+import { DrawerItemCard } from './DrawerItemCard';
+import { useHostTheme } from '@/src/lib/theme';
+import { applyDock, DRAWER_WIDTH_PX } from '@/src/lib/dock';
 import type { DrawerItem } from '@/src/lib/schema';
 
 interface Props {
@@ -9,40 +13,71 @@ interface Props {
 export function DrawerPanel({ onItemClick }: Props) {
   const { items, remove } = useDrawerItems();
   const [open, setOpen] = useState(true);
+  const theme = useHostTheme();
+
+  const sorted = useMemo(
+    () => [...items].sort((a, b) => b.createdAt - a.createdAt),
+    [items],
+  );
+  const freshId = useFreshItemId(sorted[0]);
+
+  useEffect(() => {
+    applyDock(open);
+  }, [open]);
+
+  const subtitle =
+    sorted.length > 0
+      ? `떠오른 질문 ${sorted.length}개 · 클릭하면 바로 질문`
+      : '클릭 한 번으로 질문을 담아두세요';
 
   return (
-    <div className="fixed right-0 top-1/4 z-[2147483647] w-72 font-sans">
+    <div className={theme === 'dark' ? 'qd-dark' : undefined}>
       <button
+        aria-label={open ? '서랍 닫기' : '서랍 열기'}
         onClick={() => setOpen((v) => !v)}
-        className="rounded-l-md bg-neutral-800 px-3 py-1 text-sm text-white"
+        style={{ right: open ? DRAWER_WIDTH_PX : 0 }}
+        className="fixed top-1/3 z-[2147483647] rounded-l-lg border border-r-0 border-qd-line bg-qd-panel px-2 py-3 text-xs text-qd-muted shadow-sm dark:border-qd-line-dark dark:bg-qd-panel-dark dark:text-qd-muted-dark"
       >
-        서랍 {items.length > 0 && `(${items.length})`}
+        {open ? '›' : '‹'}
       </button>
+
       {open && (
-        <div className="max-h-[60vh] overflow-y-auto rounded-l-md bg-white p-2 shadow-lg dark:bg-neutral-900">
-          {items.length === 0 && (
-            <p className="p-3 text-sm text-neutral-500">담긴 질문이 없어요.</p>
-          )}
-          <ul className="flex flex-col gap-1">
-            {items.map((item) => (
-              <li key={item.id} className="flex items-center gap-2 rounded p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                <button
-                  onClick={() => onItemClick(item)}
-                  className="flex-1 text-left text-sm text-neutral-800 dark:text-neutral-100"
-                >
-                  {item.question}
-                </button>
-                <button
-                  aria-label="삭제"
-                  onClick={() => remove(item.id)}
-                  className="text-neutral-400 hover:text-red-500"
-                >
-                  ×
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <aside
+          style={{ width: DRAWER_WIDTH_PX }}
+          className="fixed right-0 top-0 z-[2147483647] flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans dark:border-qd-line-dark dark:bg-qd-panel-dark"
+        >
+          <header className="px-4 pb-3 pt-4">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-qd-ink dark:text-qd-ink-dark">
+              <span aria-hidden>🗄️</span>
+              질문서랍
+            </h2>
+            <p className="mt-1 text-xs text-qd-muted dark:text-qd-muted-dark">{subtitle}</p>
+          </header>
+
+          <div className="flex-1 overflow-y-auto px-3 pb-3">
+            {sorted.length === 0 ? (
+              <p className="rounded-xl border border-dashed border-qd-line px-3 py-6 text-center text-xs leading-relaxed text-balance text-qd-muted dark:border-qd-line-dark dark:text-qd-muted-dark">
+                답변에서 궁금한 부분을 드래그해 담아보세요
+              </p>
+            ) : (
+              <ul className="flex flex-col gap-2">
+                {sorted.map((item) => (
+                  <DrawerItemCard
+                    key={item.id}
+                    item={item}
+                    fresh={item.id === freshId}
+                    onClick={() => onItemClick(item)}
+                    onRemove={() => remove(item.id)}
+                  />
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <footer className="border-t border-dashed border-qd-line px-4 py-3 text-center text-xs leading-relaxed text-balance text-qd-muted dark:border-qd-line-dark dark:text-qd-muted-dark">
+            답변의 단어를 클릭하거나 직접 질문을 적어 담아보세요
+          </footer>
+        </aside>
       )}
     </div>
   );
