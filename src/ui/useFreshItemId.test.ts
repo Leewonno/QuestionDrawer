@@ -23,12 +23,14 @@ describe('useFreshItemId', () => {
   });
 
   it('highlights an item that was just added', () => {
-    const { result } = renderHook(() => useFreshItemId(item(Date.now())));
+    const fresh = item(Date.now());
+    const { result } = renderHook(() => useFreshItemId(fresh));
     expect(result.current).toBe('a1');
   });
 
   it('stops highlighting after the freshness window elapses', () => {
-    const { result } = renderHook(() => useFreshItemId(item(Date.now())));
+    const fresh = item(Date.now());
+    const { result } = renderHook(() => useFreshItemId(fresh));
     expect(result.current).toBe('a1');
 
     act(() => {
@@ -39,7 +41,8 @@ describe('useFreshItemId', () => {
   });
 
   it('does not highlight an item stored in a previous session', () => {
-    const { result } = renderHook(() => useFreshItemId(item(Date.now() - FRESH_MS - 1)));
+    const old = item(Date.now() - FRESH_MS - 1);
+    const { result } = renderHook(() => useFreshItemId(old));
     expect(result.current).toBeNull();
   });
 });
