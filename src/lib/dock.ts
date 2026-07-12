@@ -4,7 +4,17 @@ export const DRAWER_WIDTH_PX = 320;
 export const DOCK_CLASS = 'qd-docked';
 
 const STYLE_ID = 'question-drawer-dock';
-const CSS = `html.${DOCK_CLASS} { margin-right: ${DRAWER_WIDTH_PX}px !important; }`;
+
+// The margin alone docks claude.ai, whose shell sits in normal flow. It cannot
+// dock chatgpt.com: that shell is Tailwind's `w-screen` (width: 100vw), and
+// viewport units resolve against the viewport, not the margin-shrunk <html>
+// box — so the shell keeps its full width and the panel just covers it. CSS
+// can't redefine `vw`, so the only fix is to override the width itself.
+// Everything below the shell is `w-full`/`flex-1` and follows it.
+const CSS = [
+  `html.${DOCK_CLASS} { margin-right: ${DRAWER_WIDTH_PX}px !important; }`,
+  `html.${DOCK_CLASS} [class~="w-screen"] { width: calc(100vw - ${DRAWER_WIDTH_PX}px) !important; }`,
+].join('\n');
 
 function ensureStyle(): void {
   if (document.getElementById(STYLE_ID)) return;

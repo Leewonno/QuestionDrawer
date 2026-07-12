@@ -16,6 +16,16 @@ describe('applyDock', () => {
     expect(document.documentElement.classList.contains(DOCK_CLASS)).toBe(true);
   });
 
+  it('shrinks viewport-width shells, which the margin alone cannot push', () => {
+    applyDock(true);
+
+    // jsdom has no layout engine, so this pins the rule's presence only; the
+    // e2e test is what measures that the shell really gets narrower.
+    expect(document.getElementById(STYLE_ID)?.textContent).toContain(
+      `width: calc(100vw - ${DRAWER_WIDTH_PX}px)`,
+    );
+  });
+
   it('unmarks html when closed but leaves the stylesheet in place', () => {
     applyDock(true);
     applyDock(false);
