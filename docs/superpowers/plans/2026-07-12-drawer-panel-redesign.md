@@ -172,16 +172,17 @@ git commit -m "feat: detect host page theme for drawer dark mode"
 **Files:**
 - Create: `src/lib/dock.ts`
 - Test: `src/lib/dock.test.ts`
-- Modify: `src/lib/site-adapter.ts` (`SiteAdapter` 인터페이스에 `layoutCss?: string` 추가)
 - Modify: `entrypoints/content/index.tsx` (언마운트 시 `cleanupDock()`)
 
 **Interfaces:**
-- Consumes: `getActiveAdapter()` from `src/lib/site-adapter.ts`, `logger` from `src/lib/logger.ts`
+- Consumes: `logger` from `src/lib/logger.ts`
 - Produces:
   - `export const DRAWER_WIDTH_PX = 320`
   - `export const DOCK_CLASS = 'qd-docked'`
-  - `export function applyDock(open: boolean, layoutCss?: string): void` — `layoutCss` 기본값은 활성 adapter의 `layoutCss ?? ''`
+  - `export function applyDock(open: boolean): void`
   - `export function cleanupDock(): void`
+
+사이트별 보정 CSS는 넣지 않는다. 두 사이트 모두 우측 가장자리에 뷰포트 고정 요소가 없어 `margin-right`만으로 충분할 것으로 본다. Task 7 수동 QA에서 실제로 겹치는 요소가 나오면 그때 필요한 CSS를 실제 값과 함께 추가한다.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -213,12 +214,6 @@ describe('applyDock', () => {
     expect(document.documentElement.classList.contains(DOCK_CLASS)).toBe(false);
     expect(document.getElementById(STYLE_ID)).not.toBeNull();
   });
-
-  it('appends site-specific layout css', () => {
-    applyDock(true, 'html.qd-docked .composer { right: 320px; }');
-
-    expect(document.getElementById(STYLE_ID)?.textContent).toContain('.composer');
-  });
 });
 
 describe('cleanupDock', () => {
@@ -242,28 +237,19 @@ Expected: FAIL — `Failed to resolve import "./dock"`
 `src/lib/dock.ts`:
 
 ```ts
-import { getActiveAdapter } from './site-adapter';
 import { logger } from './logger';
 
 export const DRAWER_WIDTH_PX = 320;
 export const DOCK_CLASS = 'qd-docked';
 
 const STYLE_ID = 'question-drawer-dock';
+const CSS = `html.${DOCK_CLASS} { margin-right: ${DRAWER_WIDTH_PX}px !important; }`;
 
-function baseCss(): string {
-  return `html.${DOCK_CLASS} { margin-right: ${DRAWER_WIDTH_PX}px !important; }`;
-}
-
-function ensureStyle(layoutCss: string): void {
-  const existing = document.getElementById(STYLE_ID);
-  const css = [baseCss(), layoutCss].filter(Boolean).join('\n');
-  if (existing) {
-    if (existing.textContent !== css) existing.textContent = css;
-    return;
-  }
+function ensureStyle(): void {
+  if (document.getElementById(STYLE_ID)) return;
   const style = document.createElement('style');
   style.id = STYLE_ID;
-  style.textContent = css;
+  style.textContent = CSS;
   document.head.append(style);
 }
 
@@ -272,12 +258,9 @@ function ensureStyle(layoutCss: string): void {
  * If this fails (host page changed, no <head>, CSP), the panel still works as a
  * fixed overlay — only the layout overlaps.
  */
-export function applyDock(
-  open: boolean,
-  layoutCss: string = getActiveAdapter()?.layoutCss ?? '',
-): void {
+export function applyDock(open: boolean): void {
   try {
-    ensureStyle(layoutCss);
+    ensureStyle();
     document.documentElement.classList.toggle(DOCK_CLASS, open);
   } catch (error) {
     logger.warn('failed to dock the drawer, falling back to overlay', error);
@@ -293,27 +276,9 @@ export function cleanupDock(): void {
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `npx vitest run src/lib/dock.test.ts`
-Expected: PASS (4 tests)
+Expected: PASS (3 tests)
 
-- [ ] **Step 5: `SiteAdapter`에 확장 지점 추가**
-
-`src/lib/site-adapter.ts`의 인터페이스에 필드를 추가한다. 두 adapter 구현체는 지금은 값을 주지 않는다 — 현재 두 사이트 모두 우측 가장자리에 뷰포트 고정 요소가 없어 `margin-right`만으로 충분하다. Task 6 수동 QA에서 겹치는 요소가 발견되면 여기에 규칙을 넣는다.
-
-```ts
-export interface SiteAdapter {
-  id: SiteId;
-  getInputBox(): HTMLElement | null;
-  insertPrompt(text: string): boolean;
-  /**
-   * Extra CSS merged into the dock stylesheet, for elements this site pins to
-   * the viewport that would sit under the docked drawer. Rules should be
-   * scoped to `html.qd-docked`.
-   */
-  layoutCss?: string;
-}
-```
-
-- [ ] **Step 6: 언마운트 시 도킹 해제**
+- [ ] **Step 5: 언마운트 시 도킹 해제**
 
 `entrypoints/content/index.tsx`에서 import를 추가하고 `onRemove`를 수정한다.
 
@@ -328,15 +293,15 @@ import { cleanupDock } from '@/src/lib/dock';
       },
 ```
 
-- [ ] **Step 7: 전체 테스트 + 타입 체크**
+- [ ] **Step 6: 전체 테스트 + 타입 체크**
 
 Run: `npx vitest run && npm run compile`
 Expected: 모든 테스트 PASS, 타입 에러 없음
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add src/lib/dock.ts src/lib/dock.test.ts src/lib/site-adapter.ts entrypoints/content/index.tsx
+git add src/lib/dock.ts src/lib/dock.test.ts entrypoints/content/index.tsx
 git commit -m "feat: push the host page aside when the drawer is docked"
 ```
 
@@ -905,7 +870,7 @@ Expected: PASS. 실패하면 셀렉터를 새 마크업에 맞춰 고친다 (질
 `.output/chrome-mv3`를 크롬에 로드하고 claude.ai와 chatgpt.com에서 각각 확인한다.
 
 1. 드로어가 우측에 도킹되고 본문이 밀려나는가
-2. 본문의 어떤 요소도 패널 아래에 깔리지 않는가 — 깔린다면 해당 사이트 adapter의 `layoutCss`에 `html.qd-docked` 스코프 규칙을 추가한다 (Task 2 Step 5 참고)
+2. 본문의 어떤 요소도 패널 아래에 깔리지 않는가 — 깔린다면 `src/lib/dock.ts`의 `CSS`에 `html.qd-docked` 스코프 규칙을 실제 선택자와 함께 추가한다 (사이트마다 다르면 그때 사이트별 분기를 넣는다)
 3. 손잡이 탭으로 접으면 페이지가 원복되는가
 4. 사이트를 다크 모드로 바꾸면 패널도 어두워지는가
 5. 텍스트를 담으면 최신 카드가 앰버로 강조됐다가 8초 뒤 일반 카드가 되는가
