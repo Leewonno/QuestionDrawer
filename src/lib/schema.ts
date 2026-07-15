@@ -6,8 +6,9 @@ export const DrawerItemSchema = z.object({
   question: z.string(),
   site: z.enum(['claude', 'chatgpt']),
   // null = captured on a fresh chat that has no id yet; adopt() attaches one
-  // as soon as the URL grows a conversation id.
-  conversationId: z.string().nullable(),
+  // as soon as the URL grows a conversation id. Missing (items stored before
+  // this field existed) is migrated to null on read via the default.
+  conversationId: z.string().nullable().default(null),
   createdAt: z.number(),
 });
 
