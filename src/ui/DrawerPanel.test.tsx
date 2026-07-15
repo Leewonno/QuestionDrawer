@@ -43,7 +43,7 @@ describe('DrawerPanel', () => {
     await drawerStorage.add(createDrawerItem('cleanup', 'claude', null));
     render(<DrawerPanel site="claude" onItemClick={() => {}} />);
 
-    expect(await screen.findByText('떠오른 질문 2개 · 클릭하면 바로 질문')).toBeInTheDocument();
+    expect(await screen.findByText('떠오른 질문 2개 · 클릭하면 바로 저장')).toBeInTheDocument();
   });
 
   it('shows the empty state when nothing is stored', async () => {

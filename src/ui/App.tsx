@@ -43,6 +43,11 @@ export function App({ site }: { site: SiteId }) {
     showToast(copied ? '입력창을 못 찾아 클립보드에 복사했어요' : '삽입에 실패했어요');
   };
 
+  // Only surface the drawer inside an actual conversation. Settings, project
+  // lists, recents and the empty new-chat screen have no conversation id, and
+  // there are no answers to capture there.
+  if (conversationId === null) return null;
+
   return (
     <>
       <SelectionButton onCapture={handleCapture} />

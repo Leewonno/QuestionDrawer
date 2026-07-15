@@ -5,6 +5,43 @@ import { App } from './App';
 import { drawerStorage } from '@/src/lib/storage';
 import { createDrawerItem } from '@/src/lib/template';
 
+describe('App visibility', () => {
+  beforeEach(() => {
+    fakeBrowser.reset();
+    history.replaceState(null, '', '/');
+  });
+
+  afterEach(() => {
+    history.replaceState(null, '', '/');
+  });
+
+  it('renders nothing outside a conversation', () => {
+    history.replaceState(null, '', '/settings/profile');
+    const { queryByLabelText } = render(<App site="claude" />);
+    expect(queryByLabelText('서랍 닫기')).toBeNull();
+  });
+
+  it('renders the drawer inside a conversation', () => {
+    history.replaceState(null, '', '/chat/chat-1');
+    const { queryByLabelText } = render(<App site="claude" />);
+    expect(queryByLabelText('서랍 닫기')).not.toBeNull();
+  });
+
+  it('hides the drawer when leaving a conversation', async () => {
+    history.replaceState(null, '', '/chat/chat-1');
+    const { queryByLabelText } = render(<App site="claude" />);
+    expect(queryByLabelText('서랍 닫기')).not.toBeNull();
+
+    act(() => {
+      history.replaceState(null, '', '/settings/profile');
+    });
+
+    await waitFor(() => {
+      expect(queryByLabelText('서랍 닫기')).toBeNull();
+    });
+  });
+});
+
 describe('App conversation adoption', () => {
   beforeEach(() => {
     fakeBrowser.reset();
