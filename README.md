@@ -4,7 +4,7 @@
 
 <img width="600" alt="질문서랍 — Question Drawer" src="docs/assets/banner.svg" />
 
-<br /><br />
+<br />
 
 ![WXT](https://img.shields.io/badge/WXT-67D74E?style=for-the-badge&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
