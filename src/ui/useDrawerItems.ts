@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import { drawerStorage } from '@/src/lib/storage';
-import type { DrawerItem } from '@/src/lib/schema';
+import { useEffect, useMemo, useState } from "react";
+import { drawerStorage } from "@/src/lib/storage";
+import type { DrawerItem } from "@/src/lib/schema";
 
 export function useDrawerItems(
-  site: DrawerItem['site'],
+  site: DrawerItem["site"],
   conversationId: string | null,
 ) {
   const [stored, setStored] = useState<DrawerItem[]>([]);
@@ -25,7 +25,9 @@ export function useDrawerItems(
   // matches the items parked there.
   const items = useMemo(
     () =>
-      stored.filter((i) => i.site === site && i.conversationId === conversationId),
+      stored.filter(
+        (i) => i.site === site && i.conversationId === conversationId,
+      ),
     [stored, site, conversationId],
   );
 

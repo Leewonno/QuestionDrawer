@@ -1,9 +1,9 @@
-import { logger } from './logger';
+import { logger } from "./logger";
 
 export const DRAWER_WIDTH_PX = 320;
-export const DOCK_CLASS = 'qd-docked';
+export const DOCK_CLASS = "qd-docked";
 
-const STYLE_ID = 'question-drawer-dock';
+const STYLE_ID = "question-drawer-dock";
 
 // The margin alone docks claude.ai, whose shell sits in normal flow. It cannot
 // dock chatgpt.com: that shell is Tailwind's `w-screen` (width: 100vw), and
@@ -14,11 +14,11 @@ const STYLE_ID = 'question-drawer-dock';
 const CSS = [
   `html.${DOCK_CLASS} { margin-right: ${DRAWER_WIDTH_PX}px !important; }`,
   `html.${DOCK_CLASS} [class~="w-screen"] { width: calc(100vw - ${DRAWER_WIDTH_PX}px) !important; }`,
-].join('\n');
+].join("\n");
 
 function ensureStyle(): void {
   if (document.getElementById(STYLE_ID)) return;
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.id = STYLE_ID;
   style.textContent = CSS;
   document.head.append(style);
@@ -34,7 +34,7 @@ export function applyDock(open: boolean): void {
     ensureStyle();
     document.documentElement.classList.toggle(DOCK_CLASS, open);
   } catch (error) {
-    logger.warn('failed to dock the drawer, falling back to overlay', error);
+    logger.warn("failed to dock the drawer, falling back to overlay", error);
   }
 }
 

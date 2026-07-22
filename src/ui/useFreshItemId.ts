@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import type { DrawerItem } from '@/src/lib/schema';
+import { useEffect, useState } from "react";
+import type { DrawerItem } from "@/src/lib/schema";
 
 export const FRESH_MS = 8000;
 

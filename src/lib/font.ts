@@ -1,8 +1,8 @@
-import { browser } from 'wxt/browser';
-import { logger } from './logger';
+import { browser } from "wxt/browser";
+import { logger } from "./logger";
 
-const FONT_FAMILY = 'Pretendard Variable';
-const FONT_ASSET = 'fonts/PretendardVariable.woff2';
+const FONT_FAMILY = "Pretendard Variable";
+const FONT_ASSET = "fonts/PretendardVariable.woff2";
 
 /**
  * Register Pretendard as a document font at runtime.
@@ -20,14 +20,21 @@ export async function loadPretendard(): Promise<void> {
 
   try {
     const url = browser.runtime.getURL(FONT_ASSET as never);
-    const face = new FontFace(FONT_FAMILY, `url(${url}) format('woff2-variations')`, {
-      weight: '45 920',
-      style: 'normal',
-      display: 'swap',
-    });
+    const face = new FontFace(
+      FONT_FAMILY,
+      `url(${url}) format('woff2-variations')`,
+      {
+        weight: "45 920",
+        style: "normal",
+        display: "swap",
+      },
+    );
     await face.load();
     document.fonts.add(face);
   } catch (error) {
-    logger.warn('failed to load Pretendard font, falling back to system fonts', error);
+    logger.warn(
+      "failed to load Pretendard font, falling back to system fonts",
+      error,
+    );
   }
 }

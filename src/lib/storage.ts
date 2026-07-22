@@ -1,8 +1,8 @@
-import { storage } from 'wxt/utils/storage';
-import { DrawerStateSchema, type DrawerItem, type DrawerState } from './schema';
-import { logger } from './logger';
+import { storage } from "wxt/utils/storage";
+import { DrawerStateSchema, type DrawerItem, type DrawerState } from "./schema";
+import { logger } from "./logger";
 
-const KEY = 'local:drawer' as const;
+const KEY = "local:drawer" as const;
 const EMPTY: DrawerState = { items: [] };
 
 async function read(): Promise<DrawerState> {
@@ -10,7 +10,7 @@ async function read(): Promise<DrawerState> {
   if (raw == null) return EMPTY;
   const parsed = DrawerStateSchema.safeParse(raw);
   if (!parsed.success) {
-    logger.warn('drawer state failed validation, resetting', parsed.error);
+    logger.warn("drawer state failed validation, resetting", parsed.error);
     return EMPTY;
   }
   return parsed.data;
@@ -40,7 +40,7 @@ export const drawerStorage = {
   },
   // Items captured on a fresh chat have no conversation id yet. Once the URL
   // grows one, they belong to that conversation.
-  async adopt(site: DrawerItem['site'], conversationId: string): Promise<void> {
+  async adopt(site: DrawerItem["site"], conversationId: string): Promise<void> {
     const state = await read();
     const pending = state.items.some(
       (i) => i.site === site && i.conversationId === null,
@@ -49,7 +49,9 @@ export const drawerStorage = {
     if (!pending) return;
     await write({
       items: state.items.map((i) =>
-        i.site === site && i.conversationId === null ? { ...i, conversationId } : i,
+        i.site === site && i.conversationId === null
+          ? { ...i, conversationId }
+          : i,
       ),
     });
   },

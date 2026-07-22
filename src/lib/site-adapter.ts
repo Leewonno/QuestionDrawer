@@ -1,6 +1,6 @@
-import { logger } from './logger';
+import { logger } from "./logger";
 
-export type SiteId = 'claude' | 'chatgpt';
+export type SiteId = "claude" | "chatgpt";
 
 export interface SiteAdapter {
   id: SiteId;
@@ -34,10 +34,10 @@ function setText(el: HTMLElement, text: string): void {
   if (el instanceof HTMLTextAreaElement) {
     const setter = Object.getOwnPropertyDescriptor(
       HTMLTextAreaElement.prototype,
-      'value',
+      "value",
     )?.set;
     setter?.call(el, text);
-    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event("input", { bubbles: true }));
     return;
   }
   // contenteditable (ProseMirror): execCommand triggers the framework's
@@ -46,28 +46,28 @@ function setText(el: HTMLElement, text: string): void {
   // Fall back to manual textContent + input event.
   // Guard for environments (e.g. jsdom) where execCommand is unimplemented.
   const inserted =
-    typeof document.execCommand === 'function' &&
-    document.execCommand('selectAll', false) &&
-    document.execCommand('insertText', false, text);
+    typeof document.execCommand === "function" &&
+    document.execCommand("selectAll", false) &&
+    document.execCommand("insertText", false, text);
   if (!inserted) {
     el.textContent = text;
-    el.dispatchEvent(new InputEvent('input', { bubbles: true, data: text }));
+    el.dispatchEvent(new InputEvent("input", { bubbles: true, data: text }));
   }
 }
 
 const chatgpt: SiteAdapter = {
-  id: 'chatgpt',
+  id: "chatgpt",
   getInputBox: () =>
     firstMatch([
-      '#prompt-textarea',
+      "#prompt-textarea",
       'div[contenteditable="true"]',
       'textarea[data-testid="prompt-textarea"]',
-      'textarea',
+      "textarea",
     ]),
   insertPrompt(text) {
     const box = this.getInputBox();
     if (!box) {
-      logger.warn('chatgpt input box not found');
+      logger.warn("chatgpt input box not found");
       return false;
     }
     setText(box, text);
@@ -75,24 +75,24 @@ const chatgpt: SiteAdapter = {
   },
   isWithinChat: (node) =>
     withinAny(node, [
-      '[data-message-author-role]',
+      "[data-message-author-role]",
       '[data-testid^="conversation-turn"]',
-      '.markdown',
+      ".markdown",
     ]),
 };
 
 const claude: SiteAdapter = {
-  id: 'claude',
+  id: "claude",
   getInputBox: () =>
     firstMatch([
       'div[contenteditable="true"]',
-      'div[enterkeyhint][contenteditable]',
-      'textarea',
+      "div[enterkeyhint][contenteditable]",
+      "textarea",
     ]),
   insertPrompt(text) {
     const box = this.getInputBox();
     if (!box) {
-      logger.warn('claude input box not found');
+      logger.warn("claude input box not found");
       return false;
     }
     setText(box, text);
@@ -101,13 +101,15 @@ const claude: SiteAdapter = {
   isWithinChat: (node) =>
     withinAny(node, [
       '[data-testid="user-message"]',
-      '.font-claude-message',
-      '[data-test-render-count]',
+      ".font-claude-message",
+      "[data-test-render-count]",
     ]),
 };
 
-export function getActiveAdapter(host: string = location.hostname): SiteAdapter | null {
-  if (host === 'claude.ai' || host.endsWith('.claude.ai')) return claude;
-  if (host === 'chatgpt.com' || host.endsWith('.chatgpt.com')) return chatgpt;
+export function getActiveAdapter(
+  host: string = location.hostname,
+): SiteAdapter | null {
+  if (host === "claude.ai" || host.endsWith(".claude.ai")) return claude;
+  if (host === "chatgpt.com" || host.endsWith(".chatgpt.com")) return chatgpt;
   return null;
 }

@@ -13,10 +13,15 @@ interface Props {
   site: SiteId;
   onItemClick: (item: DrawerItem) => void;
   onAddQuestion?: (question: string) => void;
+  conversationId: string | null;
 }
 
-export function DrawerPanel({ site, onItemClick, onAddQuestion }: Props) {
-  const conversationId = useConversationId();
+export function DrawerPanel({
+  site,
+  onItemClick,
+  onAddQuestion,
+  conversationId,
+}: Props) {
   const { items, remove, update } = useDrawerItems(site, conversationId);
   const [open, setOpen] = useState(true);
   const [adding, setAdding] = useState(false);
@@ -61,7 +66,7 @@ export function DrawerPanel({ site, onItemClick, onAddQuestion }: Props) {
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         style={{ right: open ? DRAWER_WIDTH_PX : 0 }}
-        className="pointer-events-auto fixed top-1/3 z-[2147483647] rounded-l-lg border border-r-0 border-qd-line bg-qd-panel px-2 py-3 text-xs text-qd-muted shadow-sm dark:border-qd-line-dark dark:bg-qd-panel-dark dark:text-qd-muted-dark"
+        className="pointer-events-auto fixed top-1/3 z-2147483647 rounded-l-lg border border-r-0 border-qd-line bg-qd-panel px-2 py-3 text-xs text-qd-muted shadow-sm dark:border-qd-line-dark dark:bg-qd-panel-dark dark:text-qd-muted-dark"
       >
         {open ? "›" : "‹"}
       </button>
@@ -69,7 +74,7 @@ export function DrawerPanel({ site, onItemClick, onAddQuestion }: Props) {
       {open && (
         <aside
           style={{ width: DRAWER_WIDTH_PX }}
-          className="pointer-events-auto fixed right-0 top-0 z-[2147483647] flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans dark:border-qd-line-dark dark:bg-qd-panel-dark"
+          className="pointer-events-auto fixed right-0 top-0 z-2147483647 flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans dark:border-qd-line-dark dark:bg-qd-panel-dark"
         >
           <header className="px-4 pb-3 pt-4">
             <div className="flex items-start justify-between gap-2">

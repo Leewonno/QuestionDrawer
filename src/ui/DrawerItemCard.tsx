@@ -1,4 +1,4 @@
-import type { DrawerItem } from '@/src/lib/schema';
+import type { DrawerItem } from "@/src/lib/schema";
 
 interface Props {
   item: DrawerItem;
@@ -8,13 +8,19 @@ interface Props {
   onEdit: () => void;
 }
 
-export function DrawerItemCard({ item, fresh, onClick, onRemove, onEdit }: Props) {
+export function DrawerItemCard({
+  item,
+  fresh,
+  onClick,
+  onRemove,
+  onEdit,
+}: Props) {
   return (
     <li
       className={`group relative rounded-xl border transition-colors ${
         fresh
-          ? 'border-qd-accent bg-qd-fresh dark:bg-qd-fresh-dark'
-          : 'border-qd-line bg-qd-card dark:border-qd-line-dark dark:bg-qd-card-dark'
+          ? "border-qd-accent bg-qd-fresh dark:bg-qd-fresh-dark"
+          : "border-qd-line bg-qd-card dark:border-qd-line-dark dark:bg-qd-card-dark"
       }`}
     >
       <button
@@ -24,10 +30,10 @@ export function DrawerItemCard({ item, fresh, onClick, onRemove, onEdit }: Props
         <span
           aria-hidden
           className={`mt-0.5 shrink-0 text-xs ${
-            fresh ? 'text-qd-accent' : 'text-qd-muted dark:text-qd-muted-dark'
+            fresh ? "text-qd-accent" : "text-qd-muted dark:text-qd-muted-dark"
           }`}
         >
-          {fresh ? '✦' : '?'}
+          {fresh ? "✦" : "?"}
         </span>
         <span className="flex flex-col gap-1">
           <span className="line-clamp-2 text-sm leading-snug text-qd-ink dark:text-qd-ink-dark">

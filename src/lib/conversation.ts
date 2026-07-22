@@ -25,7 +25,9 @@ export function getConversationId(url: string = location.href): string | null {
 // own history object — the one the site's router calls — is untouched by it.
 // Polling the URL is what actually sees the switch. popstate IS delivered here,
 // so back/forward lands without waiting for the next tick.
-export function watchConversationId(cb: (id: string | null) => void): () => void {
+export function watchConversationId(
+  cb: (id: string | null) => void,
+): () => void {
   let current = getConversationId();
 
   const emit = () => {
@@ -36,10 +38,10 @@ export function watchConversationId(cb: (id: string | null) => void): () => void
   };
 
   const timer = setInterval(emit, POLL_MS);
-  window.addEventListener('popstate', emit);
+  window.addEventListener("popstate", emit);
 
   return () => {
     clearInterval(timer);
-    window.removeEventListener('popstate', emit);
+    window.removeEventListener("popstate", emit);
   };
 }

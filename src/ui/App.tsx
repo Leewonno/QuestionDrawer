@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { DrawerPanel } from './DrawerPanel';
-import { SelectionButton } from './SelectionButton';
-import { useConversationId } from './useConversationId';
-import { createDrawerItem, createManualDrawerItem } from '@/src/lib/template';
-import { drawerStorage } from '@/src/lib/storage';
-import { getConversationId } from '@/src/lib/conversation';
-import { getActiveAdapter, type SiteId } from '@/src/lib/site-adapter';
-import { copyToClipboard, showToast } from '@/src/lib/fallback';
-import { logger } from '@/src/lib/logger';
-import type { DrawerItem } from '@/src/lib/schema';
+import { useCallback, useEffect, useRef } from "react";
+import { DrawerPanel } from "./DrawerPanel";
+import { SelectionButton } from "./SelectionButton";
+import { useConversationId } from "./useConversationId";
+import { createDrawerItem, createManualDrawerItem } from "@/src/lib/template";
+import { drawerStorage } from "@/src/lib/storage";
+import { getConversationId } from "@/src/lib/conversation";
+import { getActiveAdapter, type SiteId } from "@/src/lib/site-adapter";
+import { copyToClipboard, showToast } from "@/src/lib/fallback";
+import { logger } from "@/src/lib/logger";
+import type { DrawerItem } from "@/src/lib/schema";
 
 export function App({ site }: { site: SiteId }) {
   const conversationId = useConversationId();
@@ -23,7 +23,7 @@ export function App({ site }: { site: SiteId }) {
     previousId.current = conversationId;
     if (previous !== null || conversationId === null) return;
     drawerStorage.adopt(site, conversationId).catch((error) => {
-      logger.error('failed to adopt drawer items', error);
+      logger.error("failed to adopt drawer items", error);
     });
   }, [conversationId, site]);
 
@@ -36,8 +36,8 @@ export function App({ site }: { site: SiteId }) {
     drawerStorage
       .add(createDrawerItem(text, site, getConversationId()))
       .catch((error) => {
-        logger.error('failed to save drawer item', error);
-        showToast('저장에 실패했어요');
+        logger.error("failed to save drawer item", error);
+        showToast("저장에 실패했어요");
       });
   };
 
@@ -45,8 +45,8 @@ export function App({ site }: { site: SiteId }) {
     drawerStorage
       .add(createManualDrawerItem(question, site, getConversationId()))
       .catch((error) => {
-        logger.error('failed to save drawer item', error);
-        showToast('저장에 실패했어요');
+        logger.error("failed to save drawer item", error);
+        showToast("저장에 실패했어요");
       });
   };
 
@@ -54,7 +54,9 @@ export function App({ site }: { site: SiteId }) {
     const adapter = getActiveAdapter();
     if (adapter?.insertPrompt(item.question)) return;
     const copied = await copyToClipboard(item.question);
-    showToast(copied ? '입력창을 못 찾아 클립보드에 복사했어요' : '삽입에 실패했어요');
+    showToast(
+      copied ? "입력창을 못 찾아 클립보드에 복사했어요" : "삽입에 실패했어요",
+    );
   };
 
   // Only surface the drawer inside an actual conversation. Settings, project
@@ -69,6 +71,7 @@ export function App({ site }: { site: SiteId }) {
         site={site}
         onItemClick={handleItemClick}
         onAddQuestion={handleManualAdd}
+        conversationId={conversationId}
       />
     </>
   );

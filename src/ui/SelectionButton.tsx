@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface Props {
   onCapture: (text: string) => void;
@@ -17,8 +17,8 @@ export function SelectionButton({ onCapture, isWithinChat }: Props) {
   useEffect(() => {
     const update = () => {
       const sel = window.getSelection();
-      const text = sel?.toString().trim() ?? '';
-      if (!sel || sel.rangeCount === 0 || text === '') {
+      const text = sel?.toString().trim() ?? "";
+      if (!sel || sel.rangeCount === 0 || text === "") {
         setPos(null);
         return;
       }
@@ -33,16 +33,16 @@ export function SelectionButton({ onCapture, isWithinChat }: Props) {
       // at all. Real browsers do; fall back to a zero rect so positioning simply
       // degrades instead of throwing.
       const rect =
-        typeof range.getBoundingClientRect === 'function'
+        typeof range.getBoundingClientRect === "function"
           ? range.getBoundingClientRect()
           : { right: 0, bottom: 0 };
       setPos({ text, x: rect.right, y: rect.bottom });
     };
-    document.addEventListener('mouseup', update);
-    document.addEventListener('selectionchange', update);
+    document.addEventListener("mouseup", update);
+    document.addEventListener("selectionchange", update);
     return () => {
-      document.removeEventListener('mouseup', update);
-      document.removeEventListener('selectionchange', update);
+      document.removeEventListener("mouseup", update);
+      document.removeEventListener("selectionchange", update);
     };
   }, [isWithinChat]);
 
@@ -56,7 +56,12 @@ export function SelectionButton({ onCapture, isWithinChat }: Props) {
         window.getSelection()?.removeAllRanges();
         setPos(null);
       }}
-      style={{ position: 'fixed', left: pos.x, top: pos.y + 4, zIndex: 2147483647 }}
+      style={{
+        position: "fixed",
+        left: pos.x,
+        top: pos.y + 4,
+        zIndex: 2147483647,
+      }}
       className="rounded-md bg-neutral-800 px-2 py-1 text-xs text-white shadow"
     >
       서랍에 담기
