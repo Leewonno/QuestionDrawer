@@ -1,6 +1,6 @@
 import { logger } from "./logger";
 
-export type SiteId = "claude" | "chatgpt";
+export type SiteId = "claude" | "chatgpt" | "kimi";
 
 export interface SiteAdapter {
   id: SiteId;
@@ -106,10 +106,43 @@ const claude: SiteAdapter = {
     ]),
 };
 
+// Kimi (Moonshot AI). Served from www.kimi.com; conversation URLs are
+// /chat/<id>, which the shared conversation.ts pattern already handles.
+// NOTE: getInputBox and isWithinChat selectors below are best-effort and should
+// be verified against the live DOM — Kimi ships an obfuscated build, so the
+// generic contenteditable/textarea fallback and the class-substring matchers
+// may need tightening once inspected on the real page.
+const kimi: SiteAdapter = {
+  id: "kimi",
+  getInputBox: () =>
+    firstMatch([
+      'div[contenteditable="true"]',
+      ".chat-input-editor",
+      'textarea[data-testid="msh-chatinput"]',
+      "textarea",
+    ]),
+  insertPrompt(text) {
+    const box = this.getInputBox();
+    if (!box) {
+      logger.warn("kimi input box not found");
+      return false;
+    }
+    setText(box, text);
+    return true;
+  },
+  isWithinChat: (node) =>
+    withinAny(node, [
+      '[class*="segment-assistant"]',
+      '[class*="chat-content-item"]',
+      ".markdown",
+    ]),
+};
+
 export function getActiveAdapter(
   host: string = location.hostname,
 ): SiteAdapter | null {
   if (host === "claude.ai" || host.endsWith(".claude.ai")) return claude;
   if (host === "chatgpt.com" || host.endsWith(".chatgpt.com")) return chatgpt;
+  if (host === "kimi.com" || host.endsWith(".kimi.com")) return kimi;
   return null;
 }

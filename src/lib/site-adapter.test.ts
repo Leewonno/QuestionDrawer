@@ -8,6 +8,9 @@ describe('getActiveAdapter', () => {
   it('selects chatgpt adapter on chatgpt.com', () => {
     expect(getActiveAdapter('chatgpt.com')?.id).toBe('chatgpt');
   });
+  it('selects kimi adapter on www.kimi.com', () => {
+    expect(getActiveAdapter('www.kimi.com')?.id).toBe('kimi');
+  });
   it('returns null on unknown hosts', () => {
     expect(getActiveAdapter('example.com')).toBeNull();
   });
@@ -104,6 +107,10 @@ describe('getActiveAdapter host matching', () => {
 
   it('rejects a spoofed host that merely ends with chatgpt.com', () => {
     expect(getActiveAdapter('evilchatgpt.com')).toBeNull();
+  });
+
+  it('rejects a spoofed host that merely ends with kimi.com', () => {
+    expect(getActiveAdapter('evilkimi.com')).toBeNull();
   });
 
   it('accepts legitimate subdomains', () => {

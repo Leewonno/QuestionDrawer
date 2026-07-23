@@ -6,7 +6,7 @@ export function buildQuestion(selectedText: string): string {
 
 export function createDrawerItem(
   selectedText: string,
-  site: "claude" | "chatgpt",
+  site: "claude" | "chatgpt" | "kimi",
   conversationId: string | null,
 ): DrawerItem {
   const text = selectedText.trim();
@@ -24,7 +24,7 @@ export function createDrawerItem(
 // no template is applied. selectedText mirrors it so the item shape stays whole.
 export function createManualDrawerItem(
   question: string,
-  site: "claude" | "chatgpt",
+  site: "claude" | "chatgpt" | "kimi",
   conversationId: string | null,
 ): DrawerItem {
   const text = question.trim();
