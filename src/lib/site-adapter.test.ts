@@ -11,6 +11,9 @@ describe('getActiveAdapter', () => {
   it('selects kimi adapter on www.kimi.com', () => {
     expect(getActiveAdapter('www.kimi.com')?.id).toBe('kimi');
   });
+  it('selects gemini adapter on gemini.google.com', () => {
+    expect(getActiveAdapter('gemini.google.com')?.id).toBe('gemini');
+  });
   it('returns null on unknown hosts', () => {
     expect(getActiveAdapter('example.com')).toBeNull();
   });
@@ -111,6 +114,11 @@ describe('getActiveAdapter host matching', () => {
 
   it('rejects a spoofed host that merely ends with kimi.com', () => {
     expect(getActiveAdapter('evilkimi.com')).toBeNull();
+  });
+
+  it('does not match other google.com subdomains', () => {
+    expect(getActiveAdapter('mail.google.com')).toBeNull();
+    expect(getActiveAdapter('evilgemini.google.com')).toBeNull();
   });
 
   it('accepts legitimate subdomains', () => {

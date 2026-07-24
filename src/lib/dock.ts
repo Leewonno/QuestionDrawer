@@ -11,15 +11,37 @@ const STYLE_ID = "question-drawer-dock";
 // box — so the shell keeps its full width and the panel just covers it. CSS
 // can't redefine `vw`, so the only fix is to override the width itself.
 // Everything below the shell is `w-full`/`flex-1` and follows it.
+//
+// gemini.google.com has the same problem for a different reason: its Angular
+// shell is the `<bard-sidenav-container>` custom element, sized to the viewport
+// (100vw) and so ignoring the <html> margin — the panel just covers it. Shrink
+// that element instead; its sidenav + content (flex/100%) reflow to follow.
+// A lone `width` override isn't enough here: Gemini also pins the shell with
+// `min-width: 100vw`, which would clamp the width straight back to full. Pin
+// all three (width/min-width/max-width) so none of them can win it back.
+//
+// Gemini's top bar (`<top-bar-actions>`: the 업그레이드/더보기 buttons) is a
+// SIBLING of that shell, anchored to the viewport's right edge — so shrinking
+// the shell leaves it sitting under the drawer. It isn't width-driven, so slide
+// the whole bar left by the drawer width with a transform instead.
+//
 // The transition lives on the base (undocked) selector so the margin/width
 // animate in both directions — toggling the class only swaps the target value,
 // it doesn't re-declare the transition. Duration matches the panel's slide in
 // DrawerPanel.tsx (300ms) so the page and the drawer move as one.
+const DOCKED_WIDTH = `calc(100vw - ${DRAWER_WIDTH_PX}px)`;
 const CSS = [
   `html { transition: margin-right 300ms ease; }`,
   `html.${DOCK_CLASS} { margin-right: ${DRAWER_WIDTH_PX}px !important; }`,
   `html [class~="w-screen"] { transition: width 300ms ease; }`,
-  `html.${DOCK_CLASS} [class~="w-screen"] { width: calc(100vw - ${DRAWER_WIDTH_PX}px) !important; }`,
+  `html.${DOCK_CLASS} [class~="w-screen"] { width: ${DOCKED_WIDTH} !important; }`,
+  `html bard-sidenav-container { transition: width 300ms ease, min-width 300ms ease, max-width 300ms ease; }`,
+  `html.${DOCK_CLASS} bard-sidenav-container {` +
+    ` width: ${DOCKED_WIDTH} !important;` +
+    ` min-width: ${DOCKED_WIDTH} !important;` +
+    ` max-width: ${DOCKED_WIDTH} !important; }`,
+  `html top-bar-actions { transition: transform 300ms ease; }`,
+  `html.${DOCK_CLASS} top-bar-actions { transform: translateX(-${DRAWER_WIDTH_PX}px) !important; }`,
 ].join("\n");
 
 function ensureStyle(): void {

@@ -1,6 +1,6 @@
 import { logger } from "./logger";
 
-export type SiteId = "claude" | "chatgpt" | "kimi";
+export type SiteId = "claude" | "chatgpt" | "kimi" | "gemini";
 
 export interface SiteAdapter {
   id: SiteId;
@@ -138,11 +138,46 @@ const kimi: SiteAdapter = {
     ]),
 };
 
+// Google Gemini. Served from gemini.google.com; conversation URLs are
+// /app/<id>, handled by the shared conversation.ts pattern. The input is a
+// Quill editor (div.ql-editor[contenteditable]) wrapped in <rich-textarea>.
+// NOTE: getInputBox and isWithinChat selectors are best-effort and should be
+// verified against the live DOM — Gemini ships an Angular build with its own
+// custom elements (<message-content>, <user-query>), so the class-substring
+// matchers may need tightening once inspected on the real page.
+const gemini: SiteAdapter = {
+  id: "gemini",
+  getInputBox: () =>
+    firstMatch([
+      "rich-textarea div.ql-editor[contenteditable]",
+      "div.ql-editor[contenteditable]",
+      'div[contenteditable="true"]',
+      "textarea",
+    ]),
+  insertPrompt(text) {
+    const box = this.getInputBox();
+    if (!box) {
+      logger.warn("gemini input box not found");
+      return false;
+    }
+    setText(box, text);
+    return true;
+  },
+  isWithinChat: (node) =>
+    withinAny(node, [
+      "message-content",
+      "user-query",
+      '[class*="model-response"]',
+      ".markdown",
+    ]),
+};
+
 export function getActiveAdapter(
   host: string = location.hostname,
 ): SiteAdapter | null {
   if (host === "claude.ai" || host.endsWith(".claude.ai")) return claude;
   if (host === "chatgpt.com" || host.endsWith(".chatgpt.com")) return chatgpt;
   if (host === "kimi.com" || host.endsWith(".kimi.com")) return kimi;
+  if (host === "gemini.google.com") return gemini;
   return null;
 }

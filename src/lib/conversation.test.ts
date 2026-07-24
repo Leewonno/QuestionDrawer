@@ -19,6 +19,10 @@ describe('getConversationId', () => {
     expect(getConversationId('https://chatgpt.com/g/g-writer/c/abc-123')).toBe('abc-123');
   });
 
+  it('reads the id from a gemini conversation url', () => {
+    expect(getConversationId('https://gemini.google.com/app/abc-123')).toBe('abc-123');
+  });
+
   it('ignores query strings and hashes', () => {
     expect(getConversationId('https://claude.ai/chat/abc-123?ref=x#top')).toBe('abc-123');
   });

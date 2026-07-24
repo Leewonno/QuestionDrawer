@@ -1,8 +1,12 @@
 // Conversation id lives in the URL path, so it survives reloads and works in
-// any tab: claude.ai/chat/<id>, chatgpt.com/c/<id>, chatgpt.com/g/<gizmo>/c/<id>.
-// Matched by path shape only — the host is already narrowed by the content
-// script's match patterns.
-const PATTERNS = [/^\/chat\/([^/?#]+)/, /(?:^|\/)c\/([^/?#]+)/];
+// any tab: claude.ai/chat/<id>, chatgpt.com/c/<id>, chatgpt.com/g/<gizmo>/c/<id>,
+// kimi.com/chat/<id>, gemini.google.com/app/<id>. Matched by path shape only —
+// the host is already narrowed by the content script's match patterns.
+const PATTERNS = [
+  /^\/chat\/([^/?#]+)/,
+  /(?:^|\/)c\/([^/?#]+)/,
+  /^\/app\/([^/?#]+)/,
+];
 
 export const POLL_MS = 400;
 

@@ -26,6 +26,30 @@ describe('applyDock', () => {
     );
   });
 
+  it("shrinks gemini's viewport-filling Angular shell", () => {
+    applyDock(true);
+
+    // jsdom has no layout engine, so this pins the rule's presence only; the
+    // e2e test is what measures that the shell really gets narrower. Gemini
+    // clamps the shell with min-width: 100vw, so the override must pin
+    // min-width too or the width alone gets clamped straight back.
+    const css = document.getElementById(STYLE_ID)?.textContent ?? '';
+    expect(css).toContain(`width: calc(100vw - ${DRAWER_WIDTH_PX}px) !important`);
+    expect(css).toContain(
+      `min-width: calc(100vw - ${DRAWER_WIDTH_PX}px) !important`,
+    );
+  });
+
+  it("slides gemini's viewport-anchored top bar out from under the drawer", () => {
+    applyDock(true);
+
+    // The 업그레이드/더보기 buttons sit in <top-bar-actions>, a sibling of the
+    // shrunk shell, so they need their own leftward shift.
+    expect(document.getElementById(STYLE_ID)?.textContent).toContain(
+      `top-bar-actions { transform: translateX(-${DRAWER_WIDTH_PX}px) !important`,
+    );
+  });
+
   it('unmarks html when closed but leaves the stylesheet in place', () => {
     applyDock(true);
     applyDock(false);

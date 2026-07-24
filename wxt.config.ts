@@ -10,6 +10,7 @@ export default defineConfig({
       "*://claude.ai/*",
       "*://chatgpt.com/*",
       "*://*.kimi.com/*",
+      "*://gemini.google.com/*",
     ],
     // Pretendard is loaded at runtime via a chrome-extension:// URL so it
     // bypasses the host pages' strict `default-src 'none'` CSP. The font must be
@@ -17,7 +18,12 @@ export default defineConfig({
     web_accessible_resources: [
       {
         resources: ["fonts/*"],
-        matches: ["*://claude.ai/*", "*://chatgpt.com/*", "*://*.kimi.com/*"],
+        matches: [
+          "*://claude.ai/*",
+          "*://chatgpt.com/*",
+          "*://*.kimi.com/*",
+          "*://gemini.google.com/*",
+        ],
       },
     ],
   },
