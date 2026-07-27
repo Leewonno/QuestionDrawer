@@ -46,8 +46,8 @@ export async function probeLanguageModel(): Promise<void> {
 function buildTidyPrompt(text: string, locale: Locale): string {
   if (locale === "ko") {
     return [
-      "다음 텍스트를 핵심 주제만 담은 짧은 한국어 명사구 하나로 정리해줘.",
-      "질문 문장이나 설명, 따옴표 없이 주제 구절만 한 줄로 출력해.",
+      "다음 텍스트와 문장을 핵심 주제만 담아서 요약해줘.",
+      "질문 문장이나 설명, 따옴표 없이 주제 구절만 짧게 출력해.",
       "",
       "텍스트:",
       text,
@@ -82,7 +82,9 @@ export async function tidyTopic(
     if (availability === "unavailable") return null;
     const session = await model.create();
     try {
-      const output = cleanOutput(await session.prompt(buildTidyPrompt(text, locale)));
+      const output = cleanOutput(
+        await session.prompt(buildTidyPrompt(text, locale)),
+      );
       return output.length > 0 ? output : null;
     } finally {
       session.destroy();
