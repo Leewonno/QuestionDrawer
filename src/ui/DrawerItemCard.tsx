@@ -31,7 +31,7 @@ export function DrawerItemCard({
     >
       <button
         onClick={onClick}
-        className="flex w-full items-start gap-2 rounded-xl p-3 text-left"
+        className={`flex w-full ${tidying ? "items-start" : "items-center"} gap-2 rounded-xl p-3 text-left`}
       >
         {tidying ? (
           <span
@@ -42,12 +42,8 @@ export function DrawerItemCard({
         ) : (
           <span
             aria-hidden
-            className={`mt-0.5 shrink-0 text-xs ${
-              fresh ? "text-qd-accent" : "text-qd-muted dark:text-qd-muted-dark"
-            }`}
-          >
-            {fresh ? "✦" : "?"}
-          </span>
+            className="rounded-full bg-qd-accent w-1.5 h-1.5"
+          ></span>
         )}
         <span className="flex flex-col gap-1">
           <span
