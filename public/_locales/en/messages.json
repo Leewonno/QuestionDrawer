@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Question Drawer",
+    "description": "Extension name. Shown in the store listing and the extensions manager."
+  },
+  "extDescription": {
+    "message": "Drag over what you're curious about in an AI answer and save it as a question",
+    "description": "Short description shown in the store listing. Max 132 characters."
+  }
+}

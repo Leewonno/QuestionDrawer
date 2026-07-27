@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "질문서랍",
+    "description": "확장 프로그램 이름. 스토어 목록과 확장 프로그램 관리 화면에 표시됩니다."
+  },
+  "extDescription": {
+    "message": "AI 답변에서 궁금한 내용을 드래그해 질문으로 저장",
+    "description": "스토어 목록에 표시되는 짧은 설명. 132자 이내."
+  }
+}

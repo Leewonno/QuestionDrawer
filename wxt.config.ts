@@ -3,8 +3,13 @@ import { defineConfig } from "wxt";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: "Question Drawer",
-    description: "AI 답변에서 궁금한 내용을 드래그해 질문으로 저장",
+    // Resolved from public/_locales/<locale>/messages.json. The manifest is the
+    // one place the runtime locale toggle can't reach — Chrome picks the store
+    // name and description from the browser UI language, falling back to
+    // default_locale. In-app strings live in src/lib/i18n.ts instead.
+    name: "__MSG_extName__",
+    description: "__MSG_extDescription__",
+    default_locale: "ko",
     permissions: ["storage", "clipboardWrite"],
     host_permissions: [
       "*://claude.ai/*",
