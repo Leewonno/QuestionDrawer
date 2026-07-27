@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useI18n } from './useI18n';
 
 interface Props {
   onSave: (question: string) => void;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function AddQuestionModal({ onSave, onClose, initialValue }: Props) {
+  const { t } = useI18n();
   const editing = initialValue !== undefined;
   const [value, setValue] = useState(initialValue ?? '');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -66,6 +68,13 @@ export function AddQuestionModal({ onSave, onClose, initialValue }: Props) {
       }}
       onKeyUp={(e) => e.stopPropagation()}
       onKeyPress={(e) => e.stopPropagation()}
+      // Clipboard events bubble to the host page too. claude.ai / ChatGPT run
+      // document-level paste handlers that route pasted content into their own
+      // chat composer, so a paste inside the modal's textarea would also land in
+      // the chat input. Keep clipboard actions inside the modal.
+      onPaste={(e) => e.stopPropagation()}
+      onCopy={(e) => e.stopPropagation()}
+      onCut={(e) => e.stopPropagation()}
       className="pointer-events-auto fixed inset-0 z-[2147483647] flex items-center justify-center bg-black/40 p-4 font-sans"
     >
       <div
@@ -77,21 +86,21 @@ export function AddQuestionModal({ onSave, onClose, initialValue }: Props) {
           id="qd-add-title"
           className="text-sm font-semibold text-qd-ink dark:text-qd-ink-dark"
         >
-          {editing ? '질문 수정하기' : '질문 직접 담기'}
+          {editing ? t.editTitle : t.addTitle}
         </h3>
         <p className="mt-1 text-xs text-qd-muted dark:text-qd-muted-dark">
-          {editing ? '질문 내용을 수정하세요' : '저장하고 싶은 질문을 입력하세요'}
+          {editing ? t.editSubtitle : t.addSubtitle}
         </p>
         <textarea
           ref={textareaRef}
-          aria-label="저장할 질문"
+          aria-label={t.questionFieldAria}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit();
           }}
           rows={4}
-          placeholder="예: 리액트 훅의 동작 원리를 자세히 설명해줘"
+          placeholder={t.placeholder}
           className="mt-3 w-full resize-none rounded-xl border border-qd-line bg-qd-card px-3 py-2 text-sm leading-snug text-qd-ink placeholder:text-qd-muted focus:border-qd-accent focus:outline-none dark:border-qd-line-dark dark:bg-qd-card-dark dark:text-qd-ink-dark dark:placeholder:text-qd-muted-dark"
         />
         <div className="mt-4 flex justify-end gap-2">
@@ -99,14 +108,14 @@ export function AddQuestionModal({ onSave, onClose, initialValue }: Props) {
             onClick={onClose}
             className="rounded-lg px-3 py-1.5 text-xs text-qd-muted hover:text-qd-ink dark:text-qd-muted-dark dark:hover:text-qd-ink-dark"
           >
-            취소
+            {t.cancel}
           </button>
           <button
             onClick={submit}
             disabled={!trimmed}
             className="rounded-lg bg-qd-accent px-3 py-1.5 text-xs font-medium text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {editing ? '수정' : '담기'}
+            {editing ? t.saveEdit : t.add}
           </button>
         </div>
       </div>

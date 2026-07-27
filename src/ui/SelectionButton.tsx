@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useI18n } from "./useI18n";
 
 interface Props {
   onCapture: (text: string) => void;
@@ -13,6 +14,7 @@ interface Pos {
 
 export function SelectionButton({ onCapture, isWithinChat }: Props) {
   const [pos, setPos] = useState<Pos | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     const update = () => {
@@ -25,7 +27,18 @@ export function SelectionButton({ onCapture, isWithinChat }: Props) {
       const range = sel.getRangeAt(0);
       // Only offer capture for selections inside a chat message — not the input
       // box, sidebar, or our own UI.
-      if (!isWithinChat(range.commonAncestorContainer)) {
+      //
+      // A double-click-then-drag selects by *word*. On a message's final
+      // paragraph, word granularity has no next word left inside the message, so
+      // the focus snaps to the next word in document order (an action-toolbar
+      // button, the following message, …). That lifts commonAncestorContainer
+      // ABOVE the message container and the check below would reject it — even
+      // though the selection is anchored firmly in the chat text. So also accept
+      // it when the anchor (where the selection began) sits within chat.
+      if (
+        !isWithinChat(range.commonAncestorContainer) &&
+        !isWithinChat(sel.anchorNode)
+      ) {
         setPos(null);
         return;
       }
@@ -64,7 +77,7 @@ export function SelectionButton({ onCapture, isWithinChat }: Props) {
       }}
       className="rounded-md bg-neutral-800 px-2 py-1 text-xs text-white shadow"
     >
-      서랍에 담기
+      {t.capture}
     </button>
   );
 }

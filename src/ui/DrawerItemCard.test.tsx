@@ -62,6 +62,37 @@ describe("DrawerItemCard", () => {
     expect(onEdit).toHaveBeenCalledTimes(1);
   });
 
+  it("shows a converting indicator while tidying, and hides it otherwise", () => {
+    const { rerender } = render(
+      <DrawerItemCard
+        item={item}
+        fresh
+        tidying
+        onClick={() => {}}
+        onRemove={() => {}}
+        onEdit={() => {}}
+      />,
+    );
+    // The spinner is exposed as a status region for screen readers, and the
+    // "converting" copy replaces the fresh badge while AI is running.
+    expect(screen.getByRole("status", { name: "AI로 변환 중…" })).toBeInTheDocument();
+    expect(screen.getByText("AI로 변환 중…")).toBeInTheDocument();
+    expect(screen.queryByText("방금 담김")).toBeNull();
+
+    rerender(
+      <DrawerItemCard
+        item={item}
+        fresh
+        tidying={false}
+        onClick={() => {}}
+        onRemove={() => {}}
+        onEdit={() => {}}
+      />,
+    );
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getByText("방금 담김")).toBeInTheDocument();
+  });
+
   it("shows the just-added label only when fresh", () => {
     const { rerender } = render(
       <DrawerItemCard

@@ -21,6 +21,9 @@ let context: BrowserContext;
 test.beforeAll(async () => {
   context = await chromium.launchPersistentContext('', {
     headless: false,
+    // The drawer picks its language from the browser locale; pin it so the
+    // Korean text assertions below stay deterministic regardless of the host.
+    locale: 'ko-KR',
     args: [
       `--disable-extensions-except=${EXT_PATH}`,
       `--load-extension=${EXT_PATH}`,

@@ -1,19 +1,21 @@
 import type { DrawerItem } from "./schema";
+import { messages, type Locale } from "./i18n";
 
-export function buildQuestion(selectedText: string): string {
-  return `${selectedText.trim()}에 대해 자세히 설명해줘`;
+export function buildQuestion(selectedText: string, locale: Locale = "ko"): string {
+  return messages[locale].question(selectedText.trim());
 }
 
 export function createDrawerItem(
   selectedText: string,
   site: DrawerItem["site"],
   conversationId: string | null,
+  locale: Locale = "ko",
 ): DrawerItem {
   const text = selectedText.trim();
   return {
     id: crypto.randomUUID(),
     selectedText: text,
-    question: buildQuestion(text),
+    question: buildQuestion(text, locale),
     site,
     conversationId,
     createdAt: Date.now(),

@@ -2,8 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { buildQuestion, createDrawerItem, createManualDrawerItem } from './template';
 
 describe('buildQuestion', () => {
-  it('wraps trimmed text in the default template', () => {
+  it('wraps trimmed text in the default (Korean) template', () => {
     expect(buildQuestion('  side effect  ')).toBe('side effect에 대해 자세히 설명해줘');
+  });
+
+  it('uses the English template when locale is en', () => {
+    expect(buildQuestion('  side effect  ', 'en')).toBe('Explain side effect in detail');
   });
 });
 

@@ -5,6 +5,7 @@ import { getActiveAdapter } from '@/src/lib/site-adapter';
 import { logger } from '@/src/lib/logger';
 import { cleanupDock } from '@/src/lib/dock';
 import { loadPretendard } from '@/src/lib/font';
+import { probeLanguageModel } from '@/src/lib/ai';
 
 export default defineContentScript({
   matches: ['*://claude.ai/*', '*://chatgpt.com/*', '*://*.kimi.com/*', '*://gemini.google.com/*', '*://*.deepseek.com/*', '*://grok.com/*'],
@@ -16,6 +17,9 @@ export default defineContentScript({
       return;
     }
     void loadPretendard();
+    // Confirms at runtime whether the built-in Prompt API is reachable from the
+    // content script — check the page console for the "[probe]" lines.
+    void probeLanguageModel();
     const ui = await createShadowRootUi(ctx, {
       name: 'question-drawer-ui',
       position: 'inline',

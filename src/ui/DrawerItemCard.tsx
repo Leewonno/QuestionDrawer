@@ -1,8 +1,11 @@
+import { useI18n } from "./useI18n";
 import type { DrawerItem } from "@/src/lib/schema";
 
 interface Props {
   item: DrawerItem;
   fresh: boolean;
+  // On-device AI is currently tidying this item's question.
+  tidying?: boolean;
   onClick: () => void;
   onRemove: () => void;
   onEdit: () => void;
@@ -11,12 +14,15 @@ interface Props {
 export function DrawerItemCard({
   item,
   fresh,
+  tidying = false,
   onClick,
   onRemove,
   onEdit,
 }: Props) {
+  const { t } = useI18n();
   return (
     <li
+      aria-busy={tidying}
       className={`group relative rounded-xl border transition-colors ${
         fresh
           ? "border-qd-accent bg-qd-fresh dark:bg-qd-fresh-dark"
@@ -27,19 +33,37 @@ export function DrawerItemCard({
         onClick={onClick}
         className="flex w-full items-start gap-2 rounded-xl p-3 text-left"
       >
-        <span
-          aria-hidden
-          className={`mt-0.5 shrink-0 text-xs ${
-            fresh ? "text-qd-accent" : "text-qd-muted dark:text-qd-muted-dark"
-          }`}
-        >
-          {fresh ? "✦" : "?"}
-        </span>
+        {tidying ? (
+          <span
+            role="status"
+            aria-label={t.converting}
+            className="mt-0.5 inline-block h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-qd-line border-t-qd-accent dark:border-qd-line-dark dark:border-t-qd-accent"
+          />
+        ) : (
+          <span
+            aria-hidden
+            className={`mt-0.5 shrink-0 text-xs ${
+              fresh ? "text-qd-accent" : "text-qd-muted dark:text-qd-muted-dark"
+            }`}
+          >
+            {fresh ? "✦" : "?"}
+          </span>
+        )}
         <span className="flex flex-col gap-1">
-          <span className="line-clamp-2 text-sm leading-snug text-qd-ink dark:text-qd-ink-dark">
+          <span
+            className={`line-clamp-2 text-sm leading-snug text-qd-ink dark:text-qd-ink-dark ${
+              tidying ? "opacity-50" : ""
+            }`}
+          >
             {item.question}
           </span>
-          {fresh && <span className="text-xs text-qd-accent">방금 담김</span>}
+          {tidying ? (
+            <span className="text-xs text-qd-accent">{t.converting}</span>
+          ) : (
+            fresh && (
+              <span className="text-xs text-qd-accent">{t.freshBadge}</span>
+            )
+          )}
         </span>
       </button>
       {/* bg-inherit picks up the li's computed background, so the strip stays
@@ -47,7 +71,7 @@ export function DrawerItemCard({
           the color tokens here. */}
       <div className="pointer-events-none absolute right-1.5 top-1.5 flex items-center gap-0.5 rounded-lg bg-inherit px-0.5 opacity-0 transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
         <button
-          aria-label="수정"
+          aria-label={t.editAria}
           onClick={onEdit}
           className="rounded p-1 text-qd-muted hover:text-qd-accent dark:text-qd-muted-dark"
         >
@@ -66,7 +90,7 @@ export function DrawerItemCard({
           </svg>
         </button>
         <button
-          aria-label="삭제"
+          aria-label={t.removeAria}
           onClick={onRemove}
           className="rounded p-1 text-qd-muted hover:text-qd-danger dark:text-qd-muted-dark"
         >
