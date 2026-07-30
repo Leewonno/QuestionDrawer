@@ -32,3 +32,5 @@ playwright/.cache/
 *.njsproj
 *.sln
 *.sw?
+
+.vscode
