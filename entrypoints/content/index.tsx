@@ -1,19 +1,26 @@
-import './style.css';
-import ReactDOM from 'react-dom/client';
-import { App } from '@/src/ui/App';
-import { getActiveAdapter } from '@/src/lib/site-adapter';
-import { logger } from '@/src/lib/logger';
-import { cleanupDock } from '@/src/lib/dock';
-import { loadPretendard } from '@/src/lib/font';
-import { probeLanguageModel } from '@/src/lib/ai';
+import "./style.css";
+import ReactDOM from "react-dom/client";
+import { App } from "@/src/ui/App";
+import { getActiveAdapter } from "@/src/lib/site-adapter";
+import { logger } from "@/src/lib/logger";
+import { cleanupDock } from "@/src/lib/dock";
+import { loadPretendard } from "@/src/lib/font";
+import { probeLanguageModel } from "@/src/lib/ai";
 
 export default defineContentScript({
-  matches: ['*://claude.ai/*', '*://chatgpt.com/*', '*://*.kimi.com/*', '*://gemini.google.com/*', '*://*.deepseek.com/*', '*://grok.com/*'],
-  cssInjectionMode: 'ui',
+  matches: [
+    "*://claude.ai/*",
+    "*://chatgpt.com/*",
+    "*://*.kimi.com/*",
+    "*://gemini.google.com/*",
+    "*://*.deepseek.com/*",
+    "*://grok.com/*",
+  ],
+  cssInjectionMode: "ui",
   async main(ctx) {
     const adapter = getActiveAdapter();
     if (!adapter) {
-      logger.warn('no adapter for host, skipping mount');
+      logger.warn("no adapter for host, skipping mount");
       return;
     }
     void loadPretendard();
@@ -21,11 +28,11 @@ export default defineContentScript({
     // content script — check the page console for the "[probe]" lines.
     void probeLanguageModel();
     const ui = await createShadowRootUi(ctx, {
-      name: 'question-drawer-ui',
-      position: 'inline',
-      anchor: 'body',
+      name: "question-drawer-ui",
+      position: "inline",
+      anchor: "body",
       onMount: (container) => {
-        const app = document.createElement('div');
+        const app = document.createElement("div");
         container.append(app);
         const root = ReactDOM.createRoot(app);
         root.render(<App site={adapter.id} />);
