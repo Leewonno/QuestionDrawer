@@ -12,7 +12,6 @@ export interface Messages {
   subtitleEmpty: string;
   subtitleWithCount: (count: number) => string;
   emptyState: string;
-  footer: string;
   openDrawer: string;
   closeDrawer: string;
   languageToggleAria: string;
@@ -47,7 +46,6 @@ const ko: Messages = {
   subtitleEmpty: "클릭 한 번으로 질문을 담아두세요",
   subtitleWithCount: (count) => `떠오른 질문 ${count}개 · 클릭하면 바로 저장`,
   emptyState: "답변에서 궁금한 부분을 드래그해 담아보세요",
-  footer: "궁금한 내용을 드래그해보세요.",
   openDrawer: "서랍 열기",
   closeDrawer: "서랍 닫기",
   languageToggleAria: "언어 변경",
@@ -79,7 +77,6 @@ const en: Messages = {
   subtitleWithCount: (count) =>
     `${count} question${count === 1 ? "" : "s"} · click to insert`,
   emptyState: "Drag over what you're curious about in an answer",
-  footer: "Try dragging over what you're curious about.",
   openDrawer: "Open drawer",
   closeDrawer: "Close drawer",
   languageToggleAria: "Change language",
@@ -98,7 +95,8 @@ const en: Messages = {
   removeAria: "Delete",
   capture: "Add to drawer",
   saveFailed: "Couldn't save",
-  copiedToClipboard: "Couldn't find the input box — copied to clipboard instead",
+  copiedToClipboard:
+    "Couldn't find the input box — copied to clipboard instead",
   insertFailed: "Couldn't insert",
   question: (text) => `Explain ${text} in detail`,
   converting: "Converting with AI…",
@@ -129,6 +127,8 @@ export async function setStoredLocale(locale: Locale): Promise<void> {
   await storage.setItem(LOCALE_KEY, locale);
 }
 
-export function watchStoredLocale(cb: (locale: Locale | null) => void): () => void {
+export function watchStoredLocale(
+  cb: (locale: Locale | null) => void,
+): () => void {
   return storage.watch<string>(LOCALE_KEY, (raw) => cb(normalize(raw)));
 }

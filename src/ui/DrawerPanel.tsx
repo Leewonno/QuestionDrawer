@@ -59,9 +59,7 @@ export function DrawerPanel({
   useEffect(() => cleanupDock, []);
 
   const subtitle =
-    sorted.length > 0
-      ? t.subtitleWithCount(sorted.length)
-      : t.subtitleEmpty;
+    sorted.length > 0 ? t.subtitleWithCount(sorted.length) : t.subtitleEmpty;
 
   return (
     <div className={theme === "dark" ? "qd-dark" : undefined}>
@@ -83,60 +81,60 @@ export function DrawerPanel({
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-          <header className="px-4 pb-3 pt-4">
-            <div className="flex items-start justify-between gap-2">
-              <h2 className="flex items-center gap-1.5 text-sm font-semibold text-qd-ink dark:text-qd-ink-dark">
-                {t.drawerTitle}
-              </h2>
-              <div className="flex items-center gap-1.5">
+        <header className="px-4 pb-3 pt-4">
+          <div className="flex items-start justify-between gap-2">
+            <h2 className="flex items-center gap-1.5 text-sm font-semibold text-qd-ink dark:text-qd-ink-dark">
+              {t.drawerTitle}
+            </h2>
+            <div className="flex items-center gap-1.5">
+              <button
+                aria-label={t.languageToggleAria}
+                onClick={() => setLocale(locale === "ko" ? "en" : "ko")}
+                className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-xs leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
+              >
+                {t.languageToggleLabel}
+              </button>
+              {onAddQuestion && (
                 <button
-                  aria-label={t.languageToggleAria}
-                  onClick={() => setLocale(locale === "ko" ? "en" : "ko")}
-                  className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-xs leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
+                  aria-label={t.addQuestionAria}
+                  onClick={() => setAdding(true)}
+                  className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-base leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
                 >
-                  {t.languageToggleLabel}
+                  +
                 </button>
-                {onAddQuestion && (
-                  <button
-                    aria-label={t.addQuestionAria}
-                    onClick={() => setAdding(true)}
-                    className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-base leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
-                  >
-                    +
-                  </button>
-                )}
-              </div>
+              )}
             </div>
-            <p className="mt-1 text-xs text-qd-muted dark:text-qd-muted-dark">
-              {subtitle}
-            </p>
-          </header>
-
-          <div ref={listRef} className="flex-1 overflow-y-auto px-3 pb-3">
-            {sorted.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-qd-line px-3 py-6 text-center text-xs leading-relaxed text-balance text-qd-muted dark:border-qd-line-dark dark:text-qd-muted-dark">
-                {t.emptyState}
-              </p>
-            ) : (
-              <ul className="flex flex-col gap-2">
-                {sorted.map((item) => (
-                  <DrawerItemCard
-                    key={item.id}
-                    item={item}
-                    fresh={item.id === freshId}
-                    tidying={tidyingIds?.has(item.id) ?? false}
-                    onClick={() => onItemClick(item)}
-                    onRemove={() => remove(item.id)}
-                    onEdit={() => setEditing(item)}
-                  />
-                ))}
-              </ul>
-            )}
           </div>
+          <p className="mt-1 text-xs text-qd-muted dark:text-qd-muted-dark">
+            {subtitle}
+          </p>
+        </header>
 
-          <footer className="border-t border-dashed border-qd-line px-4 py-3 text-center text-xs leading-relaxed text-balance text-qd-muted dark:border-qd-line-dark dark:text-qd-muted-dark">
-            {t.footer}
-          </footer>
+        <div ref={listRef} className="flex-1 overflow-y-auto px-3 pb-3">
+          {sorted.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-qd-line px-3 py-6 text-center text-xs leading-relaxed text-balance text-qd-muted dark:border-qd-line-dark dark:text-qd-muted-dark">
+              {t.emptyState}
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {sorted.map((item) => (
+                <DrawerItemCard
+                  key={item.id}
+                  item={item}
+                  fresh={item.id === freshId}
+                  tidying={tidyingIds?.has(item.id) ?? false}
+                  onClick={() => onItemClick(item)}
+                  onRemove={() => remove(item.id)}
+                  onEdit={() => setEditing(item)}
+                />
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <footer className="px-4 py-3 text-center text-xs leading-relaxed text-balance text-qd-muted dark:border-qd-line-dark dark:text-qd-muted-dark">
+          © 2026 Leewonno. All rights reserved.
+        </footer>
       </aside>
 
       {editing && (
