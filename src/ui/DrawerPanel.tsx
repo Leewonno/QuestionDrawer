@@ -77,7 +77,7 @@ export function DrawerPanel({
         aria-hidden={!open}
         inert={!open}
         style={{ width: DRAWER_WIDTH_PX }}
-        className={`pointer-events-auto fixed right-0 top-0 z-100 flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans transition-transform duration-300 ease-out dark:border-qd-line-dark dark:bg-qd-panel-dark ${
+        className={`pointer-events-auto fixed right-0 top-0 z-100 flex h-screen flex-col border-l border-qd-line qd-glow font-sans transition-transform duration-300 ease-out dark:border-qd-line-dark dark:qd-glow-dark ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -90,7 +90,7 @@ export function DrawerPanel({
               <button
                 aria-label={t.languageToggleAria}
                 onClick={() => setLocale(locale === "ko" ? "en" : "ko")}
-                className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-xs leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
+                className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-xs leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark dark:hover:border-qd-accent-dark dark:hover:text-qd-accent-dark"
               >
                 {t.languageToggleLabel}
               </button>
@@ -98,7 +98,7 @@ export function DrawerPanel({
                 <button
                   aria-label={t.addQuestionAria}
                   onClick={() => setAdding(true)}
-                  className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-base leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
+                  className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-base leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark dark:hover:border-qd-accent-dark dark:hover:text-qd-accent-dark"
                 >
                   +
                 </button>

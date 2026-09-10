@@ -101,7 +101,7 @@ export function AddQuestionModal({ onSave, onClose, initialValue }: Props) {
           }}
           rows={4}
           placeholder={t.placeholder}
-          className="mt-3 w-full resize-none rounded-xl border border-qd-line bg-qd-card px-3 py-2 text-sm leading-snug text-qd-ink placeholder:text-qd-muted focus:border-qd-accent focus:outline-none dark:border-qd-line-dark dark:bg-qd-card-dark dark:text-qd-ink-dark dark:placeholder:text-qd-muted-dark"
+          className="mt-3 w-full resize-none rounded-xl border border-qd-line bg-qd-card px-3 py-2 text-sm leading-snug text-qd-ink placeholder:text-qd-muted focus:border-qd-accent focus:outline-none dark:border-qd-line-dark dark:focus:border-qd-accent-dark dark:bg-qd-card-dark dark:text-qd-ink-dark dark:placeholder:text-qd-muted-dark"
         />
         <div className="mt-4 flex justify-end gap-2">
           <button

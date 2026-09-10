@@ -75,7 +75,7 @@ export function SelectionButton({ onCapture, isWithinChat }: Props) {
         top: pos.y + 4,
         zIndex: 2147483647,
       }}
-      className="rounded-md bg-neutral-800 px-2 py-1 text-xs text-white shadow"
+      className="rounded-full bg-qd-accent px-2.5 py-1 text-xs text-white shadow-md"
     >
       {t.capture}
     </button>
