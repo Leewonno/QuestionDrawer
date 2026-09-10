@@ -3,7 +3,7 @@ import type { Locale } from "./i18n";
 
 // Selections shorter than this keep the plain question template — tidying a
 // short phrase isn't worth an on-device model round-trip.
-export const AI_TIDY_MIN_LENGTH = 30;
+export const AI_TIDY_MIN_LENGTH = 50;
 
 // Minimal shape of Chrome's built-in Prompt API (Gemini Nano). It's a web
 // platform global that only exists on capable Chrome 138+ builds, so we reach
