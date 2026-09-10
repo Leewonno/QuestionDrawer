@@ -39,13 +39,13 @@
 @utility qd-glow {
   background-color: var(--color-qd-panel);
   background-image:
-    radial-gradient(110% 22% at 25% 100%, rgb(66 133 244 / 0.13), transparent 75%),
-    radial-gradient(90% 18% at 90% 100%, rgb(120 160 255 / 0.1), transparent 75%);
+    radial-gradient(110% 22% at 25% 100%, rgb(66 133 244 / 0.08), transparent 75%),
+    radial-gradient(90% 18% at 90% 100%, rgb(120 160 255 / 0.06), transparent 75%);
 }
 
 @utility qd-glow-dark {
   background-color: var(--color-qd-panel-dark);
   background-image:
-    radial-gradient(110% 22% at 25% 100%, rgb(66 133 244 / 0.2), transparent 75%),
-    radial-gradient(90% 18% at 90% 100%, rgb(120 160 255 / 0.14), transparent 75%);
+    radial-gradient(110% 22% at 25% 100%, rgb(66 133 244 / 0.13), transparent 75%),
+    radial-gradient(90% 18% at 90% 100%, rgb(120 160 255 / 0.09), transparent 75%);
 }
