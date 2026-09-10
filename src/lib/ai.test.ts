@@ -58,7 +58,7 @@ describe("tidyTopic", () => {
     await tidyTopic("긴 원본 텍스트입니다 정말로 길어요", "ko");
     const sent = prompt.mock.calls[0][0] as string;
     expect(sent).toContain("긴 원본 텍스트입니다 정말로 길어요");
-    expect(sent).toContain("명사구");
+    expect(sent).toContain("핵심 주제");
   });
 
   it("sends the English instruction for the en locale", async () => {
@@ -66,7 +66,7 @@ describe("tidyTopic", () => {
     await tidyTopic("a fairly long english source sentence", "en");
     const sent = prompt.mock.calls[0][0] as string;
     expect(sent).toContain("a fairly long english source sentence");
-    expect(sent).toContain("topic phrase");
+    expect(sent).toContain("core topic");
   });
 
   it("destroys the session even on success", async () => {
@@ -95,7 +95,7 @@ describe("tidyTopic", () => {
     expect(await tidyTopic("some long text to tidy up here", "ko")).toBeNull();
   });
 
-  it("exposes the 30-character gate constant used by the capture path", () => {
-    expect(AI_TIDY_MIN_LENGTH).toBe(30);
+  it("exposes the 50-character gate constant used by the capture path", () => {
+    expect(AI_TIDY_MIN_LENGTH).toBe(50);
   });
 });
