@@ -45,7 +45,7 @@ const ko: Messages = {
   addQuestionAria: "질문 직접 담기",
   subtitleEmpty: "궁금한 질문을 담아두세요",
   subtitleWithCount: (count) => `담긴 질문 ${count}개`,
-  emptyState: "답변에서 궁금한 부분을 드래그해 담아보세요",
+  emptyState: "답변에서 궁금한 부분을 드래그해보세요",
   openDrawer: "서랍 열기",
   closeDrawer: "서랍 닫기",
   languageToggleAria: "언어 변경",
@@ -76,7 +76,7 @@ const en: Messages = {
   subtitleEmpty: "Save the questions you're curious about",
   subtitleWithCount: (count) =>
     `${count} question${count === 1 ? "" : "s"} saved`,
-  emptyState: "Drag over what you're curious about in an answer",
+  emptyState: "Try highlighting the part of an answer you're curious about",
   openDrawer: "Open drawer",
   closeDrawer: "Close drawer",
   languageToggleAria: "Change language",
