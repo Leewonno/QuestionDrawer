@@ -9,6 +9,11 @@ import { applyDock, cleanupDock, DRAWER_WIDTH_PX } from "@/src/lib/dock";
 import type { SiteId } from "@/src/lib/site-adapter";
 import type { DrawerItem } from "@/src/lib/schema";
 
+// Shared by the header's icon buttons so they render at one fixed square size
+// regardless of whether they hold text ("EN", "+") or an svg.
+const HEADER_BUTTON_CLASS =
+  "-mt-0.5 flex size-7 cursor-pointer shrink-0 items-center justify-center rounded-lg border border-qd-line leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark dark:hover:border-qd-accent-dark dark:hover:text-qd-accent-dark";
+
 interface Props {
   site: SiteId;
   onItemClick: (item: DrawerItem) => void;
@@ -90,7 +95,7 @@ export function DrawerPanel({
               <button
                 aria-label={t.languageToggleAria}
                 onClick={() => setLocale(locale === "ko" ? "en" : "ko")}
-                className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-xs leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark dark:hover:border-qd-accent-dark dark:hover:text-qd-accent-dark"
+                className={`${HEADER_BUTTON_CLASS} text-xs`}
               >
                 {t.languageToggleLabel}
               </button>
@@ -98,11 +103,18 @@ export function DrawerPanel({
                 <button
                   aria-label={t.addQuestionAria}
                   onClick={() => setAdding(true)}
-                  className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-base leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark dark:hover:border-qd-accent-dark dark:hover:text-qd-accent-dark"
+                  className={`${HEADER_BUTTON_CLASS} text-base`}
                 >
                   +
                 </button>
               )}
+              <button
+                aria-label={t.suffixSettingsAria}
+                onClick={() => setEditingSuffix(true)}
+                className={HEADER_BUTTON_CLASS}
+              >
+                <GearIcon />
+              </button>
             </div>
           </div>
           <p className="mt-1 text-xs text-qd-muted dark:text-qd-muted-dark">
