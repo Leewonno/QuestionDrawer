@@ -104,11 +104,17 @@ const claude: SiteAdapter = {
     setText(box, text);
     return true;
   },
+  // Claude Code on the web (claude.ai/code/session_<id>) renders its own
+  // transcript: each turn is a [data-testid="transcript-row"] wrapping a
+  // [data-epitaxy-entry] article. Match the rows, not the surrounding
+  // epitaxy-virtual-transcript feed, so the composer never qualifies.
   isWithinChat: (node) =>
     withinAny(node, [
       '[data-testid="user-message"]',
       ".font-claude-message",
       "[data-test-render-count]",
+      '[data-testid="transcript-row"]',
+      "[data-epitaxy-entry]",
     ]),
 };
 

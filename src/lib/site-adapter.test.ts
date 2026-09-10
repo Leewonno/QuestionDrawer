@@ -92,6 +92,30 @@ describe('isWithinChat', () => {
     expect(adapter.isWithinChat(document.getElementById('a')!.firstChild)).toBe(true);
   });
 
+  it('matches nodes inside a claude code web transcript row', () => {
+    document.body.innerHTML =
+      '<div data-testid="transcript-row" data-perf-row="assistant"><p id="a">hi</p></div>';
+    const adapter = getActiveAdapter('claude.ai')!;
+    expect(adapter.isWithinChat(document.getElementById('a')!.firstChild)).toBe(true);
+  });
+
+  it('matches nodes inside a claude code web message entry', () => {
+    document.body.innerHTML =
+      '<div data-epitaxy-entry="msg_011" role="article"><pre id="a">code</pre></div>';
+    const adapter = getActiveAdapter('claude.ai')!;
+    expect(adapter.isWithinChat(document.getElementById('a')!.firstChild)).toBe(true);
+  });
+
+  it('rejects the claude code web composer even though it sits beside the transcript', () => {
+    document.body.innerHTML =
+      '<div data-testid="epitaxy-virtual-transcript">' +
+      '<div data-testid="transcript-row"><p>hi</p></div>' +
+      '</div>' +
+      '<div contenteditable="true" id="composer">draft</div>';
+    const adapter = getActiveAdapter('claude.ai')!;
+    expect(adapter.isWithinChat(document.getElementById('composer')!.firstChild)).toBe(false);
+  });
+
   it('matches nodes inside a chatgpt message turn', () => {
     document.body.innerHTML = '<div data-message-author-role="assistant"><p id="a">hi</p></div>';
     const adapter = getActiveAdapter('chatgpt.com')!;
