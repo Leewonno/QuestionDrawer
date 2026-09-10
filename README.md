@@ -55,7 +55,7 @@ Claude / ChatGPT / Gemini / Grok / Kimi / DeepSeek 답변을 읽다 보면 "이�
 
 ### 대화별 분리
 
-- URL의 대화 ID(`claude.ai/chat/<id>`, `chatgpt.com/c/<id>`, `gemini.google.com/app/<id>`, `grok.com/c/<id>`, `kimi.com/chat/<id>`, `chat.deepseek.com/a/chat/s/<id>`)를 기준으로 질문을 저장
+- URL의 대화 ID(`claude.ai/chat/<id>`, `claude.ai/code/session_<id>`, `chatgpt.com/c/<id>`, `gemini.google.com/app/<id>`, `grok.com/c/<id>`, `kimi.com/chat/<id>`, `chat.deepseek.com/a/chat/s/<id>`)를 기준으로 질문을 저장
 - 아직 ID가 없는 새 대화에서 담은 질문은 첫 메시지를 보내 ID가 생기는 순간 그 대화로 귀속
 
 <br />
@@ -65,14 +65,15 @@ Claude / ChatGPT / Gemini / Grok / Kimi / DeepSeek 답변을 읽다 보면 "이�
 
 ## 지원 사이트
 
-| 사이트   | 도메인              |
-| -------- | ------------------- |
-| Claude   | `claude.ai`         |
-| ChatGPT  | `chatgpt.com`       |
-| Gemini   | `gemini.google.com` |
-| Grok     | `grok.com`          |
-| Kimi     | `kimi.com`          |
-| DeepSeek | `chat.deepseek.com` |
+| 사이트         | 도메인              |
+| -------------- | ------------------- |
+| Claude         | `claude.ai`         |
+| Claude Code 웹 | `claude.ai/code`    |
+| ChatGPT        | `chatgpt.com`       |
+| Gemini         | `gemini.google.com` |
+| Grok           | `grok.com`          |
+| Kimi           | `kimi.com`          |
+| DeepSeek       | `chat.deepseek.com` |
 
 ## 시작하기
 
