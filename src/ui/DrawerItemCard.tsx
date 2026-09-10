@@ -25,7 +25,7 @@ export function DrawerItemCard({
       aria-busy={tidying}
       className={`group relative rounded-xl border transition-colors ${
         fresh
-          ? "border-qd-accent bg-qd-fresh dark:bg-qd-fresh-dark"
+          ? "border-qd-accent bg-qd-fresh dark:border-qd-accent-dark dark:bg-qd-fresh-dark"
           : "border-qd-line bg-qd-card dark:border-qd-line-dark dark:bg-qd-card-dark"
       }`}
     >
@@ -37,12 +37,12 @@ export function DrawerItemCard({
           <span
             role="status"
             aria-label={t.converting}
-            className="mt-0.5 inline-block h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-qd-line border-t-qd-accent dark:border-qd-line-dark dark:border-t-qd-accent"
+            className="mt-0.5 inline-block h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-qd-line border-t-qd-accent dark:border-qd-line-dark dark:border-t-qd-accent-dark"
           />
         ) : (
           <span
             aria-hidden
-            className="rounded-full bg-qd-accent w-1.5 h-1.5"
+            className="h-1.5 w-1.5 shrink-0 rounded-full bg-qd-accent dark:bg-qd-accent-dark"
           ></span>
         )}
         <span className="flex flex-col gap-1">
@@ -54,10 +54,14 @@ export function DrawerItemCard({
             {item.question}
           </span>
           {tidying ? (
-            <span className="text-xs text-qd-accent">{t.converting}</span>
+            <span className="text-xs text-qd-accent dark:text-qd-accent-dark">
+              {t.converting}
+            </span>
           ) : (
             fresh && (
-              <span className="text-xs text-qd-accent">{t.freshBadge}</span>
+              <span className="text-xs text-qd-accent dark:text-qd-accent-dark">
+                {t.freshBadge}
+              </span>
             )
           )}
         </span>
@@ -69,7 +73,7 @@ export function DrawerItemCard({
         <button
           aria-label={t.editAria}
           onClick={onEdit}
-          className="rounded p-1 text-qd-muted hover:text-qd-accent dark:text-qd-muted-dark"
+          className="rounded p-1 text-qd-muted hover:text-qd-accent dark:text-qd-muted-dark dark:hover:text-qd-accent-dark"
         >
           <svg
             aria-hidden

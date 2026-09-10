@@ -7,7 +7,19 @@ describe('buildQuestion', () => {
   });
 
   it('uses the English template when locale is en', () => {
-    expect(buildQuestion('  side effect  ', 'en')).toBe('Explain side effect in detail');
+    expect(buildQuestion('  side effect  ', 'en')).toBe('side effect: explain this in detail');
+  });
+
+  it('appends a custom suffix instead of the default', () => {
+    expect(buildQuestion('  side effect  ', 'ko', '를 쉽게 알려줘')).toBe('side effect를 쉽게 알려줘');
+  });
+
+  it('keeps a custom suffix regardless of locale', () => {
+    expect(buildQuestion('side effect', 'en', '를 쉽게 알려줘')).toBe('side effect를 쉽게 알려줘');
+  });
+
+  it('uses the bare text when the custom suffix is empty', () => {
+    expect(buildQuestion('  side effect  ', 'ko', '')).toBe('side effect');
   });
 });
 
@@ -24,6 +36,12 @@ describe('createDrawerItem', () => {
       conversationId: 'chat-1',
       createdAt: 42,
     });
+  });
+
+  it('applies the custom suffix to the question', () => {
+    expect(createDrawerItem('side effect', 'chatgpt', 'chat-1', 'ko', '를 쉽게 알려줘').question).toBe(
+      'side effect를 쉽게 알려줘',
+    );
   });
 
   it('keeps the conversation id null when the chat has none yet', () => {

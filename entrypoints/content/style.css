@@ -16,18 +16,36 @@
     BlinkMacSystemFont, system-ui, 'Segoe UI', Roboto, 'Apple SD Gothic Neo',
     'Noto Sans KR', 'Malgun Gothic', sans-serif;
 
-  --color-qd-panel: #fdf9ee;
-  --color-qd-panel-dark: #1b1a17;
+  --color-qd-panel: #ffffff;
+  --color-qd-panel-dark: #16181d;
   --color-qd-card: #ffffff;
-  --color-qd-card-dark: #26241f;
-  --color-qd-fresh: #fef6e0;
-  --color-qd-fresh-dark: #33291a;
-  --color-qd-line: #f0e3c4;
-  --color-qd-line-dark: #3b3529;
-  --color-qd-accent: #d97706;
-  --color-qd-ink: #2b2620;
-  --color-qd-ink-dark: #ede8df;
-  --color-qd-muted: #8b8172;
-  --color-qd-muted-dark: #9c9384;
+  --color-qd-card-dark: #1f2229;
+  --color-qd-fresh: #f5f8ff;
+  --color-qd-fresh-dark: #1b2233;
+  --color-qd-line: #eaeef4;
+  --color-qd-line-dark: #2c3039;
+  /* Dark variant keeps the accent readable on dark panels. */
+  --color-qd-accent: #1a67d2;
+  --color-qd-accent-dark: #8ab4f8;
+  --color-qd-ink: #1f2430;
+  --color-qd-ink-dark: #e3e6ec;
+  --color-qd-muted: #6b7385;
+  --color-qd-muted-dark: #969cab;
   --color-qd-danger: #dc2626;
+}
+
+/* Panel surface: plain white with a faint blue glow rising from the bottom
+   edge, in the spirit of Gemini. The rest of the panel stays untinted. */
+@utility qd-glow {
+  background-color: var(--color-qd-panel);
+  background-image:
+    radial-gradient(110% 22% at 25% 100%, rgb(66 133 244 / 0.08), transparent 75%),
+    radial-gradient(90% 18% at 90% 100%, rgb(120 160 255 / 0.06), transparent 75%);
+}
+
+@utility qd-glow-dark {
+  background-color: var(--color-qd-panel-dark);
+  background-image:
+    radial-gradient(110% 22% at 25% 100%, rgb(66 133 244 / 0.13), transparent 75%),
+    radial-gradient(90% 18% at 90% 100%, rgb(120 160 255 / 0.09), transparent 75%);
 }

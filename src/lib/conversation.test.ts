@@ -11,6 +11,17 @@ describe('getConversationId', () => {
     expect(getConversationId('https://claude.ai/chat/abc-123')).toBe('abc-123');
   });
 
+  it('reads the id from a claude code web session url', () => {
+    expect(getConversationId('https://claude.ai/code/session_01FCK6knJTNCcLU8b5y4X95s')).toBe(
+      'session_01FCK6knJTNCcLU8b5y4X95s',
+    );
+  });
+
+  it('returns null on the claude code landing page', () => {
+    expect(getConversationId('https://claude.ai/code')).toBeNull();
+    expect(getConversationId('https://claude.ai/code/')).toBeNull();
+  });
+
   it('reads the id from a chatgpt conversation url', () => {
     expect(getConversationId('https://chatgpt.com/c/abc-123')).toBe('abc-123');
   });

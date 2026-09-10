@@ -116,6 +116,46 @@ describe("App language toggle", () => {
 
     await drawerStorage.add(createDrawerItem("side effect", "claude", "chat-1", "en"));
     const items = await drawerStorage.getAll();
-    expect(items[0].question).toBe("Explain side effect in detail");
+    expect(items[0].question).toBe("side effect: explain this in detail");
+  });
+});
+
+describe("App question tail per language", () => {
+  beforeEach(() => {
+    fakeBrowser.reset();
+    history.replaceState(null, "", "/chat/chat-1");
+  });
+
+  afterEach(() => {
+    history.replaceState(null, "", "/");
+  });
+
+  it("keeps a separate suffix for each language", async () => {
+    const { getByLabelText, findByLabelText, getByRole } = render(
+      <App site="claude" />,
+    );
+
+    await userEvent.click(getByLabelText("질문 꼬리말 설정"));
+    const field = getByRole("textbox", { name: "질문 뒤에 붙일 문장" });
+    await userEvent.clear(field);
+    await userEvent.type(field, "를 쉽게 알려줘");
+    await userEvent.click(getByRole("button", { name: "저장" }));
+
+    // English never had a custom suffix, so it still shows its own default.
+    await userEvent.click(getByLabelText("언어 변경"));
+    await findByLabelText("Close drawer");
+    await userEvent.click(getByLabelText("Question tail settings"));
+    expect(
+      getByRole("textbox", { name: "Text appended to the question" }),
+    ).toHaveValue(": explain this in detail");
+    await userEvent.click(getByRole("button", { name: "Cancel" }));
+
+    // Back in Korean, the custom suffix is still there.
+    await userEvent.click(getByLabelText("Change language"));
+    await findByLabelText("서랍 닫기");
+    await userEvent.click(getByLabelText("질문 꼬리말 설정"));
+    expect(
+      getByRole("textbox", { name: "질문 뒤에 붙일 문장" }),
+    ).toHaveValue("를 쉽게 알려줘");
   });
 });

@@ -34,7 +34,7 @@ Claude / ChatGPT / Gemini / Grok / Kimi / DeepSeek 답변을 읽다 보면 "이�
 
 ### 온디바이스 AI 질문 다듬기
 
-- 길이가 30자 초과한 질문은 크롬 내장 AI(Gemini Nano)가 **핵심 주제 구절로 요약**한 뒤 저장
+- 길이가 50자 초과한 질문은 크롬 내장 AI(Gemini Nano)가 **핵심 주제 구절로 요약**한 뒤 저장
 - 크롬 내장 AI를 쓸 수 없는 환경에서는 원문 질문을 그대로 유지 (요약은 전부 기기 안에서만 수행)
 
 ### 서랍에서 꺼내기
@@ -46,15 +46,16 @@ Claude / ChatGPT / Gemini / Grok / Kimi / DeepSeek 답변을 읽다 보면 "이�
 
 - 카드의 수정 버튼으로 저장된 질문 내용을 변경
 - 삭제 버튼으로 필요 없어진 질문을 제거
+- 서랍 헤더의 톱니바퀴 버튼으로 드래그한 내용 뒤에 붙일 문장을 직접 설정 (미리보기 제공, "기본값으로"로 되돌리기, 스위치로 꼬리말 끄기)
 
 ### 한국어 / 영어 지원
 
 - 브라우저 언어를 감지해 한국어·영어 UI를 자동 선택하고, 서랍 헤더의 토글로 언제든 전환 (선택은 저장됨)
-- 질문 템플릿도 언어를 따라감 — `"~에 대해 자세히 설명해줘"` / `"Explain ~ in detail"`
+- 기본 질문 문장도 언어를 따라감 — `"~에 대해 자세히 설명해줘"` / `"~: explain this in detail"` (직접 설정한 꼬리말은 한국어·영어 각각 따로 저장)
 
 ### 대화별 분리
 
-- URL의 대화 ID(`claude.ai/chat/<id>`, `chatgpt.com/c/<id>`, `gemini.google.com/app/<id>`, `grok.com/c/<id>`, `kimi.com/chat/<id>`, `chat.deepseek.com/a/chat/s/<id>`)를 기준으로 질문을 저장
+- URL의 대화 ID(`claude.ai/chat/<id>`, `claude.ai/code/session_<id>`, `chatgpt.com/c/<id>`, `gemini.google.com/app/<id>`, `grok.com/c/<id>`, `kimi.com/chat/<id>`, `chat.deepseek.com/a/chat/s/<id>`)를 기준으로 질문을 저장
 - 아직 ID가 없는 새 대화에서 담은 질문은 첫 메시지를 보내 ID가 생기는 순간 그 대화로 귀속
 
 <br />
@@ -64,14 +65,15 @@ Claude / ChatGPT / Gemini / Grok / Kimi / DeepSeek 답변을 읽다 보면 "이�
 
 ## 지원 사이트
 
-| 사이트   | 도메인              |
-| -------- | ------------------- |
-| Claude   | `claude.ai`         |
-| ChatGPT  | `chatgpt.com`       |
-| Gemini   | `gemini.google.com` |
-| Grok     | `grok.com`          |
-| Kimi     | `kimi.com`          |
-| DeepSeek | `chat.deepseek.com` |
+| 사이트         | 도메인              |
+| -------------- | ------------------- |
+| Claude         | `claude.ai`         |
+| Claude Code 웹 | `claude.ai/code`    |
+| ChatGPT        | `chatgpt.com`       |
+| Gemini         | `gemini.google.com` |
+| Grok           | `grok.com`          |
+| Kimi           | `kimi.com`          |
+| DeepSeek       | `chat.deepseek.com` |
 
 ## 시작하기
 

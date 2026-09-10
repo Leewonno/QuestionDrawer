@@ -34,10 +34,21 @@ export interface Messages {
   saveFailed: string;
   copiedToClipboard: string;
   insertFailed: string;
-  // The prompt actually sent to the AI when capturing a selection.
-  question: (text: string) => string;
+  // Appended after a captured selection to form the prompt sent to the AI,
+  // unless the user has set their own wording in the settings modal.
+  questionSuffix: string;
   // Shown on a card while on-device AI is tidying a long capture.
   converting: string;
+  suffixSettingsAria: string;
+  suffixTitle: string;
+  suffixSubtitle: string;
+  suffixFieldAria: string;
+  suffixPreviewLabel: string;
+  // Stands in for a captured selection in the settings modal's preview.
+  suffixSampleTopic: string;
+  suffixReset: string;
+  suffixSave: string;
+  suffixToggleAria: string;
 }
 
 const ko: Messages = {
@@ -45,7 +56,7 @@ const ko: Messages = {
   addQuestionAria: "질문 직접 담기",
   subtitleEmpty: "궁금한 질문을 담아두세요",
   subtitleWithCount: (count) => `담긴 질문 ${count}개`,
-  emptyState: "답변에서 궁금한 부분을 드래그해 담아보세요",
+  emptyState: "답변에서 궁금한 부분을 드래그해보세요",
   openDrawer: "서랍 열기",
   closeDrawer: "서랍 닫기",
   languageToggleAria: "언어 변경",
@@ -53,7 +64,7 @@ const ko: Messages = {
   editTitle: "질문 수정하기",
   addTitle: "질문 직접 담기",
   editSubtitle: "질문 내용을 수정하세요",
-  addSubtitle: "저장하고 싶은 질문을 입력하세요",
+  addSubtitle: "담아두고 싶은 질문을 입력하세요",
   questionFieldAria: "저장할 질문",
   placeholder: "예: 리액트 훅의 동작 원리를 자세히 설명해줘",
   cancel: "취소",
@@ -66,8 +77,17 @@ const ko: Messages = {
   saveFailed: "저장에 실패했어요",
   copiedToClipboard: "입력창을 못 찾아 클립보드에 복사했어요",
   insertFailed: "삽입에 실패했어요",
-  question: (text) => `${text}에 대해 자세히 설명해줘`,
+  questionSuffix: "에 대해 자세히 설명해줘",
   converting: "AI로 변환 중…",
+  suffixSettingsAria: "질문 꼬리말 설정",
+  suffixTitle: "질문 꼬리말",
+  suffixSubtitle: "드래그한 내용 뒤에 붙일 문장을 입력하세요",
+  suffixFieldAria: "질문 뒤에 붙일 문장",
+  suffixPreviewLabel: "미리보기",
+  suffixSampleTopic: "리액트 훅",
+  suffixReset: "기본값으로",
+  suffixSave: "저장",
+  suffixToggleAria: "꼬리말 붙이기",
 };
 
 const en: Messages = {
@@ -76,7 +96,7 @@ const en: Messages = {
   subtitleEmpty: "Save the questions you're curious about",
   subtitleWithCount: (count) =>
     `${count} question${count === 1 ? "" : "s"} saved`,
-  emptyState: "Drag over what you're curious about in an answer",
+  emptyState: "Try highlighting the part of an answer you're curious about",
   openDrawer: "Open drawer",
   closeDrawer: "Close drawer",
   languageToggleAria: "Change language",
@@ -84,7 +104,7 @@ const en: Messages = {
   editTitle: "Edit question",
   addTitle: "Add a question",
   editSubtitle: "Edit the question",
-  addSubtitle: "Enter a question you want to save",
+  addSubtitle: "Enter a question you'd like to keep",
   questionFieldAria: "Question to save",
   placeholder: "e.g. Explain how React hooks work in detail",
   cancel: "Cancel",
@@ -98,8 +118,17 @@ const en: Messages = {
   copiedToClipboard:
     "Couldn't find the input box — copied to clipboard instead",
   insertFailed: "Couldn't insert",
-  question: (text) => `Explain ${text} in detail`,
+  questionSuffix: ": explain this in detail",
   converting: "Converting with AI…",
+  suffixSettingsAria: "Question tail settings",
+  suffixTitle: "Question tail",
+  suffixSubtitle: "Enter the text to append after what you highlight",
+  suffixFieldAria: "Text appended to the question",
+  suffixPreviewLabel: "Preview",
+  suffixSampleTopic: "React hooks",
+  suffixReset: "Reset to default",
+  suffixSave: "Save",
+  suffixToggleAria: "Append question tail",
 };
 
 export const messages: Record<Locale, Messages> = { ko, en };

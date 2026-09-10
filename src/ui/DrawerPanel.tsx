@@ -3,11 +3,18 @@ import { useDrawerItems } from "./useDrawerItems";
 import { useFreshItemId } from "./useFreshItemId";
 import { DrawerItemCard } from "./DrawerItemCard";
 import { AddQuestionModal } from "./AddQuestionModal";
+import { QuestionSuffixModal } from "./QuestionSuffixModal";
+import { useQuestionSuffix } from "./useQuestionSuffix";
 import { useI18n } from "./useI18n";
 import { useHostTheme } from "@/src/lib/theme";
 import { applyDock, cleanupDock, DRAWER_WIDTH_PX } from "@/src/lib/dock";
 import type { SiteId } from "@/src/lib/site-adapter";
 import type { DrawerItem } from "@/src/lib/schema";
+
+// Shared by the header's icon buttons so they render at one fixed square size
+// regardless of whether they hold text ("EN", "+") or an svg.
+const HEADER_BUTTON_CLASS =
+  "-mt-0.5 flex size-7 cursor-pointer shrink-0 items-center justify-center rounded-lg border border-qd-line leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark dark:hover:border-qd-accent-dark dark:hover:text-qd-accent-dark";
 
 interface Props {
   site: SiteId;
@@ -29,8 +36,10 @@ export function DrawerPanel({
   const [open, setOpen] = useState(true);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<DrawerItem | null>(null);
+  const [editingSuffix, setEditingSuffix] = useState(false);
   const theme = useHostTheme();
   const { locale, setLocale, t } = useI18n();
+  const { suffix, enabled, setSuffix, setEnabled } = useQuestionSuffix(locale);
 
   const sorted = useMemo(
     () => [...items].sort((a, b) => a.createdAt - b.createdAt),
@@ -77,7 +86,7 @@ export function DrawerPanel({
         aria-hidden={!open}
         inert={!open}
         style={{ width: DRAWER_WIDTH_PX }}
-        className={`pointer-events-auto fixed right-0 top-0 z-100 flex h-screen flex-col border-l border-qd-line bg-qd-panel font-sans transition-transform duration-300 ease-out dark:border-qd-line-dark dark:bg-qd-panel-dark ${
+        className={`pointer-events-auto fixed right-0 top-0 z-100 flex h-screen flex-col border-l border-qd-line qd-glow font-sans transition-transform duration-300 ease-out dark:border-qd-line-dark dark:qd-glow-dark ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -90,7 +99,7 @@ export function DrawerPanel({
               <button
                 aria-label={t.languageToggleAria}
                 onClick={() => setLocale(locale === "ko" ? "en" : "ko")}
-                className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-xs leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
+                className={`${HEADER_BUTTON_CLASS} text-xs`}
               >
                 {t.languageToggleLabel}
               </button>
@@ -98,11 +107,18 @@ export function DrawerPanel({
                 <button
                   aria-label={t.addQuestionAria}
                   onClick={() => setAdding(true)}
-                  className="-mt-0.5 cursor-pointer shrink-0 rounded-lg border border-qd-line px-2 py-1 text-base leading-none text-qd-muted transition-colors hover:border-qd-accent hover:text-qd-accent dark:border-qd-line-dark dark:text-qd-muted-dark"
+                  className={`${HEADER_BUTTON_CLASS} text-base`}
                 >
                   +
                 </button>
               )}
+              <button
+                aria-label={t.suffixSettingsAria}
+                onClick={() => setEditingSuffix(true)}
+                className={HEADER_BUTTON_CLASS}
+              >
+                <GearIcon />
+              </button>
             </div>
           </div>
           <p className="mt-1 text-xs text-qd-muted dark:text-qd-muted-dark">
@@ -157,6 +173,37 @@ export function DrawerPanel({
           onClose={() => setAdding(false)}
         />
       )}
+
+      {editingSuffix && (
+        <QuestionSuffixModal
+          suffix={suffix}
+          enabled={enabled}
+          onSave={(settings) => {
+            setSuffix(settings.suffix);
+            setEnabled(settings.enabled);
+            setEditingSuffix(false);
+          }}
+          onClose={() => setEditingSuffix(false)}
+        />
+      )}
     </div>
+  );
+}
+
+function GearIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="block size-4"
+    >
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
   );
 }

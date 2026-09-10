@@ -1,8 +1,14 @@
 import type { DrawerItem } from "./schema";
 import { messages, type Locale } from "./i18n";
 
-export function buildQuestion(selectedText: string, locale: Locale = "ko"): string {
-  return messages[locale].question(selectedText.trim());
+// suffix null = the language's default wording. Any string (even "") is the
+// user's own wording from the settings modal and is appended verbatim.
+export function buildQuestion(
+  selectedText: string,
+  locale: Locale = "ko",
+  suffix: string | null = null,
+): string {
+  return `${selectedText.trim()}${suffix ?? messages[locale].questionSuffix}`;
 }
 
 export function createDrawerItem(
@@ -10,12 +16,13 @@ export function createDrawerItem(
   site: DrawerItem["site"],
   conversationId: string | null,
   locale: Locale = "ko",
+  suffix: string | null = null,
 ): DrawerItem {
   const text = selectedText.trim();
   return {
     id: crypto.randomUUID(),
     selectedText: text,
-    question: buildQuestion(text, locale),
+    question: buildQuestion(text, locale, suffix),
     site,
     conversationId,
     createdAt: Date.now(),

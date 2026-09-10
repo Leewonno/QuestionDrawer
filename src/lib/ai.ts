@@ -45,17 +45,12 @@ export async function probeLanguageModel(): Promise<void> {
 
 function buildTidyPrompt(text: string, locale: Locale): string {
   if (locale === "ko") {
-    return [
-      "다음 텍스트와 문장을 핵심 주제만 담아서 요약해줘.",
-      "질문 문장이나 설명, 따옴표 없이 주제 구절만 짧게 출력해.",
-      "",
-      "텍스트:",
-      text,
-    ].join("\n");
+    return ["다음 문장을 핵심 주제만 담아서 요약", "", "텍스트:", text].join(
+      "\n",
+    );
   }
   return [
-    "Rewrite the following into a single short topic phrase (a noun phrase, not a question).",
-    "Output only the phrase on one line — no quotes, no explanation.",
+    "Summarize the following text, keeping only its core topic",
     "",
     "Text:",
     text,
