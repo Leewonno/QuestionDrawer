@@ -3,6 +3,8 @@ import { useDrawerItems } from "./useDrawerItems";
 import { useFreshItemId } from "./useFreshItemId";
 import { DrawerItemCard } from "./DrawerItemCard";
 import { AddQuestionModal } from "./AddQuestionModal";
+import { QuestionSuffixModal } from "./QuestionSuffixModal";
+import { useQuestionSuffix } from "./useQuestionSuffix";
 import { useI18n } from "./useI18n";
 import { useHostTheme } from "@/src/lib/theme";
 import { applyDock, cleanupDock, DRAWER_WIDTH_PX } from "@/src/lib/dock";
@@ -34,8 +36,10 @@ export function DrawerPanel({
   const [open, setOpen] = useState(true);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<DrawerItem | null>(null);
+  const [editingSuffix, setEditingSuffix] = useState(false);
   const theme = useHostTheme();
   const { locale, setLocale, t } = useI18n();
+  const { suffix, enabled, setSuffix, setEnabled } = useQuestionSuffix(locale);
 
   const sorted = useMemo(
     () => [...items].sort((a, b) => a.createdAt - b.createdAt),
@@ -169,6 +173,37 @@ export function DrawerPanel({
           onClose={() => setAdding(false)}
         />
       )}
+
+      {editingSuffix && (
+        <QuestionSuffixModal
+          suffix={suffix}
+          enabled={enabled}
+          onSave={(settings) => {
+            setSuffix(settings.suffix);
+            setEnabled(settings.enabled);
+            setEditingSuffix(false);
+          }}
+          onClose={() => setEditingSuffix(false)}
+        />
+      )}
     </div>
+  );
+}
+
+function GearIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="block size-4"
+    >
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
   );
 }

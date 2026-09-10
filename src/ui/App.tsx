@@ -15,11 +15,13 @@ import { copyToClipboard, showToast } from "@/src/lib/fallback";
 import { logger } from "@/src/lib/logger";
 import { messages } from "@/src/lib/i18n";
 import { LocaleProvider, useLocaleState } from "./useI18n";
+import { useQuestionSuffix } from "./useQuestionSuffix";
 import type { DrawerItem } from "@/src/lib/schema";
 
 export function App({ site }: { site: SiteId }) {
   const localeValue = useLocaleState();
   const t = messages[localeValue.locale];
+  const { appliedSuffix } = useQuestionSuffix(localeValue.locale);
   const conversationId = useConversationId();
   const previousId = useRef(conversationId);
   // Ids of items whose question is being tidied by on-device AI right now, so
@@ -54,7 +56,13 @@ export function App({ site }: { site: SiteId }) {
 
   const handleCapture = (text: string) => {
     const locale = localeValue.locale;
-    const item = createDrawerItem(text, site, getConversationId(), locale);
+    const item = createDrawerItem(
+      text,
+      site,
+      getConversationId(),
+      locale,
+      appliedSuffix,
+    );
     // Long drags get condensed by on-device AI into a tidy subject, then
     // re-wrapped by the question template so the panel copy stays uniform. The
     // item is saved immediately with the plain template, so if the model is
@@ -67,7 +75,11 @@ export function App({ site }: { site: SiteId }) {
       .then(() => {
         if (!willTidy) return;
         return tidyTopic(item.selectedText, locale).then((topic) => {
-          if (topic) return drawerStorage.update(item.id, buildQuestion(topic, locale));
+          if (topic)
+            return drawerStorage.update(
+              item.id,
+              buildQuestion(topic, locale, appliedSuffix),
+            );
         });
       })
       .catch((error) => {

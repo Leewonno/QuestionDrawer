@@ -34,10 +34,21 @@ export interface Messages {
   saveFailed: string;
   copiedToClipboard: string;
   insertFailed: string;
-  // The prompt actually sent to the AI when capturing a selection.
-  question: (text: string) => string;
+  // Appended after a captured selection to form the prompt sent to the AI,
+  // unless the user has set their own wording in the settings modal.
+  questionSuffix: string;
   // Shown on a card while on-device AI is tidying a long capture.
   converting: string;
+  suffixSettingsAria: string;
+  suffixTitle: string;
+  suffixSubtitle: string;
+  suffixFieldAria: string;
+  suffixPreviewLabel: string;
+  // Stands in for a captured selection in the settings modal's preview.
+  suffixSampleTopic: string;
+  suffixReset: string;
+  suffixSave: string;
+  suffixToggleAria: string;
 }
 
 const ko: Messages = {
@@ -66,8 +77,17 @@ const ko: Messages = {
   saveFailed: "저장에 실패했어요",
   copiedToClipboard: "입력창을 못 찾아 클립보드에 복사했어요",
   insertFailed: "삽입에 실패했어요",
-  question: (text) => `${text}에 대해 자세히 설명해줘`,
+  questionSuffix: "에 대해 자세히 설명해줘",
   converting: "AI로 변환 중…",
+  suffixSettingsAria: "질문 꼬리말 설정",
+  suffixTitle: "질문 꼬리말",
+  suffixSubtitle: "드래그한 내용 뒤에 붙일 문장을 입력하세요",
+  suffixFieldAria: "질문 뒤에 붙일 문장",
+  suffixPreviewLabel: "미리보기",
+  suffixSampleTopic: "리액트 훅",
+  suffixReset: "기본값으로",
+  suffixSave: "저장",
+  suffixToggleAria: "꼬리말 붙이기",
 };
 
 const en: Messages = {
@@ -98,8 +118,17 @@ const en: Messages = {
   copiedToClipboard:
     "Couldn't find the input box — copied to clipboard instead",
   insertFailed: "Couldn't insert",
-  question: (text) => `Explain ${text} in detail`,
+  questionSuffix: ": explain this in detail",
   converting: "Converting with AI…",
+  suffixSettingsAria: "Question tail settings",
+  suffixTitle: "Question tail",
+  suffixSubtitle: "Enter the text to append after what you highlight",
+  suffixFieldAria: "Text appended to the question",
+  suffixPreviewLabel: "Preview",
+  suffixSampleTopic: "React hooks",
+  suffixReset: "Reset to default",
+  suffixSave: "Save",
+  suffixToggleAria: "Append question tail",
 };
 
 export const messages: Record<Locale, Messages> = { ko, en };

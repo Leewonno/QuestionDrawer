@@ -6,6 +6,10 @@ import { DrawerPanel } from "./DrawerPanel";
 import { drawerStorage } from "@/src/lib/storage";
 import { createDrawerItem } from "@/src/lib/template";
 import { DOCK_CLASS } from "@/src/lib/dock";
+import {
+  getQuestionSuffixEnabled,
+  getQuestionSuffixes,
+} from "@/src/lib/question-suffix";
 
 describe("DrawerPanel", () => {
   beforeEach(() => {
@@ -155,6 +159,124 @@ describe("DrawerPanel", () => {
       />,
     );
     expect(screen.queryByRole("button", { name: "질문 직접 담기" })).toBeNull();
+  });
+
+  it("opens the suffix settings prefilled with the default wording", async () => {
+    render(
+      <DrawerPanel
+        site="claude"
+        onItemClick={() => {}}
+        conversationId={null}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "질문 꼬리말 설정" }),
+    );
+
+    expect(
+      screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" }),
+    ).toHaveValue("에 대해 자세히 설명해줘");
+    expect(
+      screen.getByText("리액트 훅에 대해 자세히 설명해줘"),
+    ).toBeInTheDocument();
+  });
+
+  it("saves a custom suffix and previews it while typing", async () => {
+    render(
+      <DrawerPanel
+        site="claude"
+        onItemClick={() => {}}
+        conversationId={null}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "질문 꼬리말 설정" }),
+    );
+    const field = screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" });
+    await userEvent.clear(field);
+    await userEvent.type(field, "를 쉽게 알려줘");
+    expect(screen.getByText("리액트 훅를 쉽게 알려줘")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "저장" }));
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await waitFor(async () =>
+      expect(await getQuestionSuffixes()).toEqual({ ko: "를 쉽게 알려줘" }),
+    );
+  });
+
+  it("goes back to following the language default after a reset", async () => {
+    render(
+      <DrawerPanel
+        site="claude"
+        onItemClick={() => {}}
+        conversationId={null}
+      />,
+    );
+    const openSettings = () =>
+      userEvent.click(screen.getByRole("button", { name: "질문 꼬리말 설정" }));
+
+    await openSettings();
+    const field = screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" });
+    await userEvent.clear(field);
+    await userEvent.type(field, "를 알려줘");
+    await userEvent.click(screen.getByRole("button", { name: "저장" }));
+    await waitFor(async () =>
+      expect(await getQuestionSuffixes()).toEqual({ ko: "를 알려줘" }),
+    );
+
+    await openSettings();
+    expect(
+      screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" }),
+    ).toHaveValue("를 알려줘");
+    await userEvent.click(screen.getByRole("button", { name: "기본값으로" }));
+    expect(
+      screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" }),
+    ).toHaveValue("에 대해 자세히 설명해줘");
+    await userEvent.click(screen.getByRole("button", { name: "저장" }));
+
+    await waitFor(async () =>
+      expect(await getQuestionSuffixes()).toEqual({}),
+    );
+  });
+
+  it("switches the tail off without losing the wording", async () => {
+    render(
+      <DrawerPanel
+        site="claude"
+        onItemClick={() => {}}
+        conversationId={null}
+      />,
+    );
+    const openSettings = () =>
+      userEvent.click(screen.getByRole("button", { name: "질문 꼬리말 설정" }));
+
+    await openSettings();
+    const toggle = screen.getByRole("switch", { name: "꼬리말 붙이기" });
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    expect(
+      screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" }),
+    ).toBeDisabled();
+    expect(screen.getByText("리액트 훅")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "저장" }));
+
+    await waitFor(async () =>
+      expect(await getQuestionSuffixEnabled()).toBe(false),
+    );
+    expect(await getQuestionSuffixes()).toEqual({});
+
+    await openSettings();
+    expect(
+      screen.getByRole("switch", { name: "꼬리말 붙이기" }),
+    ).toHaveAttribute("aria-checked", "false");
+    expect(
+      screen.getByRole("textbox", { name: "질문 뒤에 붙일 문장" }),
+    ).toHaveValue("에 대해 자세히 설명해줘");
   });
 
   it("docks the page while open and undocks when collapsed", async () => {
