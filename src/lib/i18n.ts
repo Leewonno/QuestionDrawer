@@ -43,8 +43,8 @@ export interface Messages {
 const ko: Messages = {
   drawerTitle: "질문서랍",
   addQuestionAria: "질문 직접 담기",
-  subtitleEmpty: "클릭 한 번으로 질문을 담아두세요",
-  subtitleWithCount: (count) => `떠오른 질문 ${count}개 · 클릭하면 바로 저장`,
+  subtitleEmpty: "궁금한 질문을 담아두세요",
+  subtitleWithCount: (count) => `담긴 질문 ${count}개`,
   emptyState: "답변에서 궁금한 부분을 드래그해 담아보세요",
   openDrawer: "서랍 열기",
   closeDrawer: "서랍 닫기",
@@ -73,9 +73,9 @@ const ko: Messages = {
 const en: Messages = {
   drawerTitle: "Question Drawer",
   addQuestionAria: "Add a question",
-  subtitleEmpty: "Save a question with a single click",
+  subtitleEmpty: "Save the questions you're curious about",
   subtitleWithCount: (count) =>
-    `${count} question${count === 1 ? "" : "s"} · click to insert`,
+    `${count} question${count === 1 ? "" : "s"} saved`,
   emptyState: "Drag over what you're curious about in an answer",
   openDrawer: "Open drawer",
   closeDrawer: "Close drawer",

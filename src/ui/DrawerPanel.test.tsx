@@ -63,9 +63,7 @@ describe("DrawerPanel", () => {
       />,
     );
 
-    expect(
-      await screen.findByText("떠오른 질문 2개 · 클릭하면 바로 저장"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("담긴 질문 2개")).toBeInTheDocument();
   });
 
   it("shows the empty state when nothing is stored", async () => {
